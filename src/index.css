@@ -104,11 +104,12 @@
 }
 
 .thread-row-hover {
-  transition: background-color 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .thread-row-hover:hover {
-  background-color: oklch(0.98 0.005 280);
+  background-color: oklch(0.985 0.005 280);
+  border-left-color: oklch(0.50 0.18 290);
 }
 
 .header-gradient {

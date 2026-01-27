@@ -1,4 +1,4 @@
-import { Plus, SignOut, ShieldCheck, House, ChatCircle, Storefront } from '@phosphor-icons/react'
+import { Plus, SignOut, ShieldCheck, House, ChatCircle, Storefront, Trophy } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { USER_LEVELS } from '@/lib/constants'
 import { UserAvatar } from './UserAvatar'
@@ -12,6 +12,7 @@ interface HeaderProps {
   onLogout: () => void
   onNavigateHome: () => void
   onNavigateAdmin: () => void
+  onNavigateAwards: () => void
   onCreateThread: () => void
   onViewProfile: () => void
   onOpenUMKM: () => void
@@ -24,6 +25,7 @@ export function Header({
   onLogout,
   onNavigateHome,
   onNavigateAdmin,
+  onNavigateAwards,
   onCreateThread,
   onViewProfile,
   onOpenUMKM,
@@ -138,10 +140,11 @@ export function Header({
               <span>Berando</span>
             </button>
             <button
+              onClick={onNavigateAwards}
               className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
-              <ChatCircle size={16} weight="fill" />
-              <span>Thread Terbaru</span>
+              <Trophy size={16} weight="fill" />
+              <span>Lapau Awards</span>
             </button>
             {currentUser && !currentUser.isUMKMVerified && (
               <button

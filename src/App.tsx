@@ -16,7 +16,7 @@ import { UMKMVerificationDialog } from './components/UMKMVerificationDialog'
 import { Toaster } from './components/ui/sonner'
 import { toast } from 'sonner'
 
-type View = 'home' | 'thread' | 'admin' | 'profile'
+type View = 'home' | 'thread' | 'admin' | 'profile' | 'awards'
 
 function App() {
   const [users, setUsers] = useKV<User[]>('users', [])
@@ -300,6 +300,7 @@ function App() {
             setSelectedCategory('all')
           }}
           onNavigateAdmin={() => setView('admin')}
+          onNavigateAwards={() => setView('awards')}
           onCreateThread={() => setCreateThreadOpen(true)}
           onViewProfile={() => currentUser && handleViewProfile(currentUser.id)}
           onOpenUMKM={() => setUmkmDialogOpen(true)}
@@ -319,14 +320,6 @@ function App() {
                   </div>
                 )}
               </div>
-              
-              <LapauAwards
-                threads={threads || []}
-                users={users || []}
-                comments={comments || []}
-                onViewThread={handleViewThread}
-                onViewProfile={handleViewProfile}
-              />
 
               <ThreadList
                 threads={searchQuery ? getFilteredThreads() : threads || []}
@@ -341,6 +334,16 @@ function App() {
                 onAdClick={handleAdClick}
               />
             </>
+          )}
+
+          {view === 'awards' && (
+            <LapauAwards
+              threads={threads || []}
+              users={users || []}
+              comments={comments || []}
+              onViewThread={handleViewThread}
+              onViewProfile={handleViewProfile}
+            />
           )}
 
           {view === 'thread' && selectedThread && (

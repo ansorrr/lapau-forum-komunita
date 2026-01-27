@@ -68,12 +68,12 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **Progression**: Click → Optional note → Submit → Admin notification → Review → Action taken
 - **Success criteria**: Reports logged, admins notified, repeat offenders tracked, cultural tone maintained
 
-### Trending & Highlights
-- **Functionality**: Display most active threads by day/week based on comments, reactions, and velocity
-- **Purpose**: Surface engaging content and reward quality discussions
-- **Trigger**: Automatic calculation; users view "Lapau Paling Rami" section
-- **Progression**: Algorithm runs → Scores calculated → Ranking updated → Display refreshed
-- **Success criteria**: Trending accurately reflects activity, updates regularly, showcases best content
+### Lapau Awards (Monthly)
+- **Functionality**: Dedicated awards page showcasing monthly achievements: Thread Paling Rami, Urang Paling Banyak Rendang, Komentar Paling Bijak, Kieeh Terpedas Tapi Santun
+- **Purpose**: Celebrate and recognize top contributors, engaging threads, and quality content to motivate community participation
+- **Trigger**: Click "Lapau Awards" in main navigation menu
+- **Progression**: View awards page → See current month leaders → Click thread/user to view details
+- **Success criteria**: Awards accurately reflect monthly activity, display top contributors prominently, provide clear recognition of quality content, motivate continued participation
 
 ### Search Functionality
 - **Functionality**: Real-time search through thread titles and content with instant filtering
@@ -126,7 +126,7 @@ This is a full-featured forum platform with user authentication, role-based acce
 
 ## Design Direction
 
-The design should evoke a familiar, organized forum experience similar to Kaskus - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a sidebar-based category navigation, thread listings with prominent media previews, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery, with eye-catching imagery that brings threads to life. Monetization elements (premium badges, UMKM verification, ads) are integrated subtly to enhance rather than disrupt the experience.
+The design should evoke a familiar, organized forum experience similar to Kaskus/Facebook - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a left sidebar with persistent category navigation and trending threads, a main content area with large media thumbnails (96x96px) prominently displayed on the left of each thread row, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery, with eye-catching imagery that brings threads to life. The Lapau Awards section has been moved to a dedicated page accessible from the main navigation, keeping the homepage focused on content discovery. Monetization elements (premium badges, UMKM verification, ads) are integrated subtly to enhance rather than disrupt the experience.
 
 ## Color Selection
 
@@ -167,35 +167,38 @@ Animations should be quick and efficient - prioritizing content over motion. Use
 ## Component Selection
 
 - **Components**: 
-  - Card: Thread list container, individual sections with headers
+  - Card: Thread list container, sidebar widgets, individual sections with headers
   - Button: Actions with clear hierarchy (primary for approve, outline for secondary, ghost for tertiary)
   - Textarea: Thread content and comment input
   - Select/Dropdown: Mobile category selector
-  - Badge: Category tags, user levels, notification counts
+  - Badge: Category tags, user levels, notification counts, media counts
   - Tabs: Admin panel sections, content organization
   - Dialog: Thread creation, rejection notes, confirmations
   - Separator: Visual breaks within content
   - Scroll Area: Long comment threads
-  - Tooltip: Hover definitions for Minangkabau terms
+  - Tooltip: Hover definitions for Minangkabau terms, timestamps
   - Checkbox: Anonymous posting option
-  - Media Preview: Grid of thumbnails (112x112px) for images/videos in thread listings
+  - Media Thumbnail: 96x96px square thumbnail on left side of thread rows for images/videos
   
 - **Customizations**: 
-  - Sidebar navigation: Persistent category list with thread counts
-  - Thread rows: Clean listing with prominent media previews
+  - Left sidebar: Persistent category list with counts, trending threads widget (sticky positioned), ads
+  - Thread rows: Kaskus-style layout with 96x96px media thumbnail on left, content in center, stats on right
+  - Left border accent: 4px transparent border that changes to primary color on hover
   - Gradient header: Purple gradient (290-270 hue) for main header bar
-  - Reaction button bar: Horizontal list of emoji reactions with counts
+  - Reaction button bar: Horizontal list of emoji reactions with counts inline with thread metadata
   - Nested comments: Indented replies with left border indicator
-  - Section headers: Card headers with background color and uppercase labels
-  - Media thumbnails: 112x112px rounded squares showing thread images prominently
+  - Section headers: Card headers with background color and title case labels
+  - Video thumbnails: Generated thumbnail with play button overlay
+  - Empty states: Large emoji icon with encouraging message
   
 - **States**: 
-  - Buttons: Solid fills for actions, clear hover darkening, active press state
-  - Thread rows: Subtle background change on hover (no scale/shadow)
-  - Category items: Selected state with primary color background and white text
-  - Reactions: Show top 3 with counts, click to toggle with bounce animation
-  - Inputs: Simple border focus, no elaborate effects
+  - Buttons: Solid fills for actions, clear hover darkening, active press state with shadows
+  - Thread rows: Subtle background change + left border highlight on hover
+  - Category items: Selected state with primary color background, white text, and shadow
+  - Reactions: Show top 3 inline, click to toggle with bounce animation
+  - Inputs: Simple border focus with ring color
   - Media hover: Slight opacity reduction for clickable feedback
+  - Sidebar sections: Sticky positioning with proper spacing
   
 - **Icon Selection**: 
   - @phosphor-icons/react for all UI:
@@ -205,25 +208,30 @@ Animations should be quick and efficient - prioritizing content over motion. Use
   - ShieldCheck for admin access
   - User for profiles/avatars
   - House for home navigation
+  - Trophy for awards page
   - Check/X for approve/reject
   - ArrowLeft for back navigation
   - Crown for "Petuah" designation
   - Eye for view/preview
   - Trash for delete
+  - Storefront for UMKM verification
+  - Image for media indicator
   - Emoji reactions use actual emoji (🍛☕🐌🍜🌶️🥥🧂)
   
 - **Spacing**: 
-  - Compact padding: p-3 to p-6 for cards
-  - Tight gaps: gap-2 to gap-4 for most layouts
-  - Consistent borders: 1px borders throughout
-  - Content max-width: max-w-7xl for wide layout
-  - Sidebar width: w-64 on desktop
+  - Card padding: p-4 to p-5
+  - Thread row padding: px-4 py-4
+  - Gap between sidebar and main: gap-6
+  - Sidebar width: w-64 (256px)
+  - Content max-width: Container with px-4 padding
+  - Consistent border-radius from theme (0.375rem)
   
 - **Mobile**: 
-  - Sidebar collapses to dropdown selector
-  - Single column thread list
-  - Smaller avatar/icons
+  - Sidebar collapses completely, replaced with dropdown select
+  - Single column thread list with full-width cards
+  - Media thumbnails remain visible but may scale slightly smaller
   - Stacked metadata in thread rows
   - Bottom-aligned action buttons
   - Touch-friendly tap targets (min 44px)
   - Simplified admin interface with tabs
+  - Awards page maintains grid but reduces columns
