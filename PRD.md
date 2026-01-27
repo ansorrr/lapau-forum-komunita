@@ -20,11 +20,11 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **Success criteria**: Users can register, login, view/edit profiles with stats (posts, reactions, level, badges), and have unique avatar colors based on initials or custom images
 
 ### Thread Creation & Moderation
-- **Functionality**: Users create discussion threads with text, photos, and videos that enter approval queue; admins review and approve/reject
-- **Purpose**: Maintain quality content while enabling rich multimedia community participation
+- **Functionality**: Users create discussion threads with text, photos, and videos that enter approval queue; admins review and approve/reject; videos automatically generate thumbnails for better preview
+- **Purpose**: Maintain quality content while enabling rich multimedia community participation with optimized video previews
 - **Trigger**: Click "Buek Thread" button
-- **Progression**: Category selection → Title/content entry → Media upload (optional) → Submit → Pending status → Admin review → Approved/Rejected → Published or notification
-- **Success criteria**: Threads flow through moderation pipeline with media support; only approved content displays publicly with properly rendered images/videos
+- **Progression**: Category selection → Title/content entry → Media upload (optional) → Automatic thumbnail generation for videos → Submit → Pending status → Admin review → Approved/Rejected → Published or notification
+- **Success criteria**: Threads flow through moderation pipeline with media support; videos generate thumbnail previews automatically; only approved content displays publicly with properly rendered images/videos and clickable thumbnails
 
 ### Reaction System (Khas Lapau)
 - **Functionality**: Eight unique local reactions (Rendang, Teh Talua, Langkitang, Soto Padang, Samba Lado, Gulai, Asin) users can give to posts
@@ -96,6 +96,8 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **No Search Results**: Show friendly message when search yields no matches
 - **Media Upload Limits**: Cap at 5 media items per thread to maintain performance
 - **Large Media Files**: Handle base64 encoding for images/videos with size awareness
+- **Video Thumbnails**: Automatically generate and display thumbnails for video content to improve preview experience and reduce initial load
+- **Thumbnail Generation Failure**: Gracefully handle cases where thumbnail generation fails by showing video icon placeholder
 
 ## Design Direction
 

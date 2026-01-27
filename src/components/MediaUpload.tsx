@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Image, VideoCamera, X } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import type { Media } from '@/lib/types'
+import { generateVideoThumbnail } from '@/lib/videoUtils'
+import { toast } from 'sonner'
 
 interface MediaUploadProps {
   media: Media[]
@@ -12,32 +14,67 @@ interface MediaUploadProps {
 export function MediaUpload({ media, onMediaChange, maxItems = 5 }: MediaUploadProps) {
   const [uploading, setUploading] = useState(false)
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || media.length >= maxItems) return
 
     setUploading(true)
 
-    Array.from(files).forEach((file) => {
-      if (media.length >= maxItems) return
+    try {
+      const processedMedia: Media[] = []
 
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const url = event.target?.result as string
-        const type = file.type.startsWith('video/') ? 'video' : 'image'
+      for (const file of Array.from(files)) {
+        if (media.length + processedMedia.length >= maxItems) break
+
+        const reader = new FileReader()
         
-        const newMedia: Media = {
-          id: `media-${Date.now()}-${Math.random()}`,
-          type,
-          url,
-          thumbnail: type === 'video' ? url : undefined,
-        }
+        await new Promise<void>((resolve, reject) => {
+          reader.onload = async (event) => {
+            try {
+              const url = event.target?.result as string
+              const type = file.type.startsWith('video/') ? 'video' : 'image'
+              
+              let thumbnail: string | undefined
 
-        onMediaChange([...media, newMedia])
-        setUploading(false)
+              if (type === 'video') {
+                try {
+                  thumbnail = await generateVideoThumbnail(file)
+                } catch (error) {
+                  console.error('Failed to generate thumbnail:', error)
+                  thumbnail = undefined
+                }
+              }
+
+              const newMedia: Media = {
+                id: `media-${Date.now()}-${Math.random()}`,
+                type,
+                url,
+                thumbnail,
+              }
+
+              processedMedia.push(newMedia)
+              resolve()
+            } catch (error) {
+              reject(error)
+            }
+          }
+
+          reader.onerror = reject
+          reader.readAsDataURL(file)
+        })
       }
-      reader.readAsDataURL(file)
-    })
+
+      onMediaChange([...media, ...processedMedia])
+      
+      if (processedMedia.length > 0) {
+        toast.success(`${processedMedia.length} media berhasil ditambahkan`)
+      }
+    } catch (error) {
+      console.error('Error processing media:', error)
+      toast.error('Gagal memproses media')
+    } finally {
+      setUploading(false)
+    }
 
     e.target.value = ''
   }
@@ -59,11 +96,26 @@ export function MediaUpload({ media, onMediaChange, maxItems = 5 }: MediaUploadP
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <video 
-                  src={item.url} 
-                  className="w-full h-full object-cover"
-                  controls
-                />
+                <div className="relative w-full h-full">
+                  {item.thumbnail ? (
+                    <>
+                      <img 
+                        src={item.thumbnail} 
+                        alt="Video thumbnail" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                          <VideoCamera size={24} weight="fill" className="text-primary ml-1" />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-muted">
+                      <VideoCamera size={32} weight="fill" className="text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
               )}
               <button
                 onClick={() => handleRemoveMedia(item.id)}
@@ -120,7 +172,7 @@ export function MediaUpload({ media, onMediaChange, maxItems = 5 }: MediaUploadP
             >
               <span className="flex items-center gap-2">
                 <VideoCamera size={18} weight="fill" />
-                Tambah Video
+                {uploading ? 'Memproses...' : 'Tambah Video'}
               </span>
             </Button>
           </label>

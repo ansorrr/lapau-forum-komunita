@@ -10,6 +10,7 @@ import { Separator } from './ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
 import { UserAvatar } from './UserAvatar'
+import { MediaGallery } from './MediaGallery'
 import type { Thread, Comment, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 import { CommentItem } from './CommentItem'
@@ -134,25 +135,8 @@ export function ThreadDetail({
               </div>
 
               {thread.media && thread.media.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                  {thread.media.map((item) => (
-                    <div key={item.id} className="rounded-lg overflow-hidden bg-muted">
-                      {item.type === 'image' ? (
-                        <img 
-                          src={item.url} 
-                          alt="" 
-                          className="w-full h-auto max-h-96 object-contain cursor-pointer hover:opacity-90 transition-opacity"
-                          onClick={() => window.open(item.url, '_blank')}
-                        />
-                      ) : (
-                        <video 
-                          src={item.url} 
-                          controls
-                          className="w-full h-auto max-h-96"
-                        />
-                      )}
-                    </div>
-                  ))}
+                <div className="mt-4">
+                  <MediaGallery media={thread.media} />
                 </div>
               )}
             </div>

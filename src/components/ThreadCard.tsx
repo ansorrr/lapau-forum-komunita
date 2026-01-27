@@ -4,6 +4,7 @@ import { Button } from './ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
 import { UserAvatar } from './UserAvatar'
+import { MediaPreview } from './MediaPreview'
 import type { Thread, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -99,6 +100,10 @@ export function ThreadCard({ thread, currentUser, users, onViewThread, onReactio
               </Tooltip>
             </TooltipProvider>
           </div>
+
+          {hasMedia && (
+            <MediaPreview media={thread.media!} maxDisplay={3} />
+          )}
         </div>
 
         <div className="shrink-0 flex items-center gap-4">
