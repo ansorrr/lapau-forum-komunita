@@ -1,6 +1,7 @@
-import { ChatCircle, Trash, Crown, User } from '@phosphor-icons/react'
+import { ChatCircle, Trash, Crown } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
+import { UserAvatar } from './UserAvatar'
 import type { Comment, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -8,6 +9,7 @@ interface CommentItemProps {
   comment: Comment
   replies: Comment[]
   currentUser: UserType | null
+  users: UserType[]
   onReply: (commentId: string) => void
   onDelete: (commentId: string) => void
   onMarkPetuah: (commentId: string) => void
@@ -18,6 +20,7 @@ export function CommentItem({
   comment,
   replies,
   currentUser,
+  users,
   onReply,
   onDelete,
   onMarkPetuah,
@@ -25,15 +28,24 @@ export function CommentItem({
 }: CommentItemProps) {
   const isOwn = currentUser?.id === comment.authorId
   const isAdmin = currentUser?.role === 'admin'
+  const author = users.find(u => u.id === comment.authorId)
 
   return (
     <div className={`px-6 py-4 ${comment.isPetuah ? 'bg-success/5 border-l-4 border-success' : ''}`}>
       <div className="space-y-3">
         <div className="flex gap-3">
           <div className="shrink-0 hidden sm:block">
-            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-              <User size={18} weight="fill" />
-            </div>
+            {comment.isAnonymous ? (
+              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground text-sm font-bold">
+                ?
+              </div>
+            ) : author ? (
+              <UserAvatar user={author} size="md" />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                U
+              </div>
+            )}
           </div>
 
           <div className="flex-1 min-w-0">
@@ -115,6 +127,7 @@ export function CommentItem({
                 comment={reply}
                 replies={[]}
                 currentUser={currentUser}
+                users={users}
                 onReply={onReply}
                 onDelete={onDelete}
                 onMarkPetuah={onMarkPetuah}

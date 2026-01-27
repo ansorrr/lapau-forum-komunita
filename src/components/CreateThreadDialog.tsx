@@ -7,12 +7,14 @@ import { Textarea } from './ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Checkbox } from './ui/checkbox'
 import { CATEGORIES } from '@/lib/constants'
+import { MediaUpload } from './MediaUpload'
 import { toast } from 'sonner'
+import type { Media } from '@/lib/types'
 
 interface CreateThreadDialogProps {
   open: boolean
   onClose: () => void
-  onCreate: (title: string, content: string, category: string, isAnonymous: boolean) => void
+  onCreate: (title: string, content: string, category: string, isAnonymous: boolean, media?: Media[]) => void
 }
 
 export function CreateThreadDialog({ open, onClose, onCreate }: CreateThreadDialogProps) {
@@ -20,6 +22,7 @@ export function CreateThreadDialog({ open, onClose, onCreate }: CreateThreadDial
   const [content, setContent] = useState('')
   const [category, setCategory] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
+  const [media, setMedia] = useState<Media[]>([])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,13 +42,14 @@ export function CreateThreadDialog({ open, onClose, onCreate }: CreateThreadDial
       return
     }
 
-    onCreate(title, content, category, isAnonymous)
+    onCreate(title, content, category, isAnonymous, media.length > 0 ? media : undefined)
     toast.success('Thread lah dikirim, tunggu persetujuan Pangulu')
     
     setTitle('')
     setContent('')
     setCategory('')
     setIsAnonymous(false)
+    setMedia([])
   }
 
   return (
@@ -98,6 +102,11 @@ export function CreateThreadDialog({ open, onClose, onCreate }: CreateThreadDial
               rows={8}
               className="resize-none"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Gambar / Video</Label>
+            <MediaUpload media={media} onMediaChange={setMedia} />
           </div>
 
           <div className="flex items-center space-x-2">

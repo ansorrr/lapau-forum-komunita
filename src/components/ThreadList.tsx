@@ -7,6 +7,7 @@ import { ThreadCard } from './ThreadCard'
 
 interface ThreadListProps {
   threads: Thread[]
+  users: User[]
   currentUser: User | null
   selectedCategory: string
   onSelectCategory: (category: string) => void
@@ -17,6 +18,7 @@ interface ThreadListProps {
 
 export function ThreadList({
   threads,
+  users,
   currentUser,
   selectedCategory,
   onSelectCategory,
@@ -166,6 +168,7 @@ export function ThreadList({
                 <ThreadCard
                   key={thread.id}
                   thread={thread}
+                  users={users}
                   currentUser={currentUser}
                   onViewThread={onViewThread}
                   onReaction={onReaction}

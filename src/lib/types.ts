@@ -28,6 +28,16 @@ export interface User {
   totalReactions: number
   createdAt: number
   avatar?: string
+  avatarColor?: string
+}
+
+export type MediaType = 'image' | 'video'
+
+export interface Media {
+  id: string
+  type: MediaType
+  url: string
+  thumbnail?: string
 }
 
 export interface Thread {
@@ -43,6 +53,7 @@ export interface Thread {
   commentCount: number
   isAnonymous?: boolean
   rejectionNote?: string
+  media?: Media[]
 }
 
 export interface Comment {

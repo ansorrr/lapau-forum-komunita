@@ -1,6 +1,7 @@
-import { Plus, SignOut, User, ShieldCheck, House, ChatCircle } from '@phosphor-icons/react'
+import { Plus, SignOut, ShieldCheck, House, ChatCircle } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { USER_LEVELS } from '@/lib/constants'
+import { UserAvatar } from './UserAvatar'
 import type { User as UserType } from '@/lib/types'
 
 interface HeaderProps {
@@ -45,11 +46,13 @@ export function Header({
               {currentUser ? (
                 <>
                   <div className="hidden md:flex items-center gap-2 mr-2 px-3 py-1.5 bg-white/10 rounded-md">
-                    <User size={16} weight="fill" />
-                    <span className="text-sm font-medium">{currentUser.username}</span>
-                    <span className="text-xs opacity-75">
-                      ({USER_LEVELS[currentUser.level].name})
-                    </span>
+                    <UserAvatar user={currentUser} size="sm" />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium leading-tight">{currentUser.username}</span>
+                      <span className="text-xs opacity-75 leading-tight">
+                        {USER_LEVELS[currentUser.level].name}
+                      </span>
+                    </div>
                   </div>
 
                   <Button
@@ -76,9 +79,9 @@ export function Header({
                     onClick={onViewProfile}
                     variant="ghost"
                     size="sm"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-white/20 md:hidden"
                   >
-                    <User size={20} weight="fill" />
+                    <UserAvatar user={currentUser} size="sm" />
                   </Button>
 
                   <Button

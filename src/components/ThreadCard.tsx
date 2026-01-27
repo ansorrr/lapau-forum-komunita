@@ -1,22 +1,25 @@
-import { ChatCircle, Warning, User } from '@phosphor-icons/react'
+import { ChatCircle, Warning, Image as ImageIcon } from '@phosphor-icons/react'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
+import { UserAvatar } from './UserAvatar'
 import type { Thread, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 
 interface ThreadCardProps {
   thread: Thread
   currentUser: UserType | null
+  users: UserType[]
   onViewThread: (threadId: string) => void
   onReaction: (threadId: string, reaction: string) => void
   onReport: (threadId: string) => void
 }
 
-export function ThreadCard({ thread, currentUser, onViewThread, onReaction, onReport }: ThreadCardProps) {
+export function ThreadCard({ thread, currentUser, users, onViewThread, onReaction, onReport }: ThreadCardProps) {
   const category = CATEGORIES.find(c => c.id === thread.category)
   const totalReactions = Object.values(thread.reactions).flat().length
+  const author = users.find(u => u.id === thread.authorId)
 
   const userReaction = currentUser 
     ? Object.entries(thread.reactions).find(([_, users]) => users.includes(currentUser.id))?.[0]
@@ -30,6 +33,8 @@ export function ThreadCard({ thread, currentUser, onViewThread, onReaction, onRe
     .sort((a, b) => b.count - a.count)
     .slice(0, 3)
 
+  const hasMedia = thread.media && thread.media.length > 0
+
   return (
     <div 
       className="px-4 py-3 thread-row-hover cursor-pointer"
@@ -37,9 +42,17 @@ export function ThreadCard({ thread, currentUser, onViewThread, onReaction, onRe
     >
       <div className="flex items-start gap-3">
         <div className="shrink-0 hidden sm:flex flex-col items-center">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <User size={20} weight="fill" />
-          </div>
+          {thread.isAnonymous ? (
+            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+              ?
+            </div>
+          ) : author ? (
+            <UserAvatar user={author} size="md" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+              U
+            </div>
+          )}
         </div>
 
         <div className="flex-1 min-w-0">
@@ -50,6 +63,15 @@ export function ThreadCard({ thread, currentUser, onViewThread, onReaction, onRe
                 className="shrink-0 text-xs px-2 py-0.5 bg-primary/10 text-primary border-0"
               >
                 {category.emoji} {category.name}
+              </Badge>
+            )}
+            {hasMedia && (
+              <Badge 
+                variant="secondary" 
+                className="shrink-0 text-xs px-2 py-0.5 bg-accent/10 text-accent border-0"
+              >
+                <ImageIcon size={12} weight="fill" className="mr-1" />
+                {thread.media!.length}
               </Badge>
             )}
           </div>

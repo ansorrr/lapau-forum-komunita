@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
-import type { User, Thread, Comment, Report } from './lib/types'
+import type { User, Thread, Comment, Report, Media } from './lib/types'
+import { generateAvatarColor } from './lib/utils'
 import { Header } from './components/Header'
 import { AuthDialog } from './components/AuthDialog'
 import { ThreadList } from './components/ThreadList'
@@ -8,6 +9,7 @@ import { CreateThreadDialog } from './components/CreateThreadDialog'
 import { ThreadDetail } from './components/ThreadDetail'
 import { AdminPanel } from './components/AdminPanel'
 import { UserProfile } from './components/UserProfile'
+import { SearchBar } from './components/SearchBar'
 import { Toaster } from './components/ui/sonner'
 
 type View = 'home' | 'thread' | 'admin' | 'profile'
@@ -23,6 +25,7 @@ function App() {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const [authDialogOpen, setAuthDialogOpen] = useState(false)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [createThreadOpen, setCreateThreadOpen] = useState(false)
@@ -50,6 +53,7 @@ function App() {
       totalPosts: 0,
       totalReactions: 0,
       createdAt: Date.now(),
+      avatarColor: generateAvatarColor(`user-${Date.now()}`),
     }
 
     setUsers(current => [...(current || []), newUser])
@@ -63,7 +67,7 @@ function App() {
     setView('home')
   }
 
-  const handleCreateThread = (title: string, content: string, category: string, isAnonymous: boolean) => {
+  const handleCreateThread = (title: string, content: string, category: string, isAnonymous: boolean, media?: Media[]) => {
     if (!currentUser) return
 
     const newThread: Thread = {
@@ -86,6 +90,7 @@ function App() {
       },
       commentCount: 0,
       isAnonymous,
+      media,
     }
 
     setThreads(current => [newThread, ...(current || [])])
@@ -216,6 +221,23 @@ function App() {
     setView('profile')
   }
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    setSelectedCategory('all')
+  }
+
+  const getFilteredThreads = () => {
+    const approved = (threads || []).filter(t => t.status === 'approved')
+    
+    if (!searchQuery) return approved
+
+    const query = searchQuery.toLowerCase()
+    return approved.filter(t => 
+      t.title.toLowerCase().includes(query) || 
+      t.content.toLowerCase().includes(query)
+    )
+  }
+
   const selectedThread = (threads || []).find(t => t.id === selectedThreadId)
   const selectedUserProfile = (users || []).find(u => u.id === selectedUserId)
 
@@ -244,15 +266,29 @@ function App() {
 
         <main className="container mx-auto px-4 py-6 max-w-7xl">
           {view === 'home' && (
-            <ThreadList
-              threads={threads || []}
-              currentUser={currentUser || null}
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-              onViewThread={handleViewThread}
-              onReaction={handleReaction}
-              onReport={handleReport}
-            />
+            <>
+              <div className="mb-6">
+                <SearchBar 
+                  onSearch={handleSearch}
+                  placeholder="Cari thread berdasarkan judul atau isi..."
+                />
+                {searchQuery && (
+                  <div className="mt-3 text-sm text-muted-foreground">
+                    Hasil pencarian untuk: <span className="font-medium text-foreground">"{searchQuery}"</span>
+                  </div>
+                )}
+              </div>
+              <ThreadList
+                threads={searchQuery ? getFilteredThreads() : threads || []}
+                users={users || []}
+                currentUser={currentUser || null}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+                onViewThread={handleViewThread}
+                onReaction={handleReaction}
+                onReport={handleReport}
+              />
+            </>
           )}
 
           {view === 'thread' && selectedThread && (
@@ -260,6 +296,7 @@ function App() {
               thread={selectedThread}
               comments={(comments || []).filter(c => c.threadId === selectedThread.id)}
               currentUser={currentUser || null}
+              users={users || []}
               onBack={() => setView('home')}
               onReaction={handleReaction}
               onAddComment={handleAddComment}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ChatCircle, Warning, User } from '@phosphor-icons/react'
+import { ArrowLeft, ChatCircle, Warning } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
 import { Badge } from './ui/badge'
@@ -9,6 +9,7 @@ import { Label } from './ui/label'
 import { Separator } from './ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
+import { UserAvatar } from './UserAvatar'
 import type { Thread, Comment, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 import { CommentItem } from './CommentItem'
@@ -18,6 +19,7 @@ interface ThreadDetailProps {
   thread: Thread
   comments: Comment[]
   currentUser: UserType | null
+  users: UserType[]
   onBack: () => void
   onReaction: (threadId: string, reaction: string) => void
   onAddComment: (threadId: string, content: string, parentId?: string, isAnonymous?: boolean) => void
@@ -31,6 +33,7 @@ export function ThreadDetail({
   thread,
   comments,
   currentUser,
+  users,
   onBack,
   onReaction,
   onAddComment,
@@ -45,6 +48,7 @@ export function ThreadDetail({
 
   const category = CATEGORIES.find(c => c.id === thread.category)
   const totalReactions = Object.values(thread.reactions).flat().length
+  const author = users.find(u => u.id === thread.authorId)
 
   const userReaction = currentUser 
     ? Object.entries(thread.reactions).find(([_, users]) => users.includes(currentUser.id))?.[0]
@@ -93,9 +97,17 @@ export function ThreadDetail({
         <div className="p-6 space-y-4">
           <div className="flex gap-4">
             <div className="shrink-0 hidden sm:block">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                <User size={24} weight="fill" />
-              </div>
+              {thread.isAnonymous ? (
+                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground text-lg font-bold">
+                  ?
+                </div>
+              ) : author ? (
+                <UserAvatar user={author} size="lg" />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                  U
+                </div>
+              )}
             </div>
 
             <div className="flex-1 space-y-3">
@@ -120,6 +132,29 @@ export function ThreadDetail({
               <div className="prose prose-sm max-w-none text-foreground">
                 <p className="whitespace-pre-wrap leading-relaxed">{thread.content}</p>
               </div>
+
+              {thread.media && thread.media.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                  {thread.media.map((item) => (
+                    <div key={item.id} className="rounded-lg overflow-hidden bg-muted">
+                      {item.type === 'image' ? (
+                        <img 
+                          src={item.url} 
+                          alt="" 
+                          className="w-full h-auto max-h-96 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => window.open(item.url, '_blank')}
+                        />
+                      ) : (
+                        <video 
+                          src={item.url} 
+                          controls
+                          className="w-full h-auto max-h-96"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -240,6 +275,7 @@ export function ThreadDetail({
                 comment={comment}
                 replies={comments.filter(c => c.parentId === comment.id)}
                 currentUser={currentUser}
+                users={users}
                 onReply={(commentId) => setReplyingTo(commentId)}
                 onDelete={onDeleteComment}
                 onMarkPetuah={onMarkPetuah}

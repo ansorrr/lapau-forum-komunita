@@ -13,18 +13,18 @@ This is a full-featured forum platform with user authentication, role-based acce
 ## Essential Features
 
 ### User Authentication & Profiles
-- **Functionality**: User registration, login, logout with persistent sessions and profile management
-- **Purpose**: Establish identity and track contributions within the community
+- **Functionality**: User registration, login, logout with persistent sessions, profile management, and visual identity through avatars
+- **Purpose**: Establish identity and track contributions within the community with personalized visual representation
 - **Trigger**: Click "Daftar Duduak" or "Masuk Lapau" buttons
-- **Progression**: Form entry → Validation → Session creation → Dashboard access
-- **Success criteria**: Users can register, login, view/edit profiles with stats (posts, reactions, level, badges)
+- **Progression**: Form entry → Validation → Auto-generated avatar color → Session creation → Dashboard access
+- **Success criteria**: Users can register, login, view/edit profiles with stats (posts, reactions, level, badges), and have unique avatar colors based on initials or custom images
 
 ### Thread Creation & Moderation
-- **Functionality**: Users create discussion threads that enter approval queue; admins review and approve/reject
-- **Purpose**: Maintain quality content while enabling community participation
+- **Functionality**: Users create discussion threads with text, photos, and videos that enter approval queue; admins review and approve/reject
+- **Purpose**: Maintain quality content while enabling rich multimedia community participation
 - **Trigger**: Click "Buek Thread" button
-- **Progression**: Category selection → Title/content entry → Submit → Pending status → Admin review → Approved/Rejected → Published or notification
-- **Success criteria**: Threads flow through moderation pipeline; only approved content displays publicly
+- **Progression**: Category selection → Title/content entry → Media upload (optional) → Submit → Pending status → Admin review → Approved/Rejected → Published or notification
+- **Success criteria**: Threads flow through moderation pipeline with media support; only approved content displays publicly with properly rendered images/videos
 
 ### Reaction System (Khas Lapau)
 - **Functionality**: Eight unique local reactions (Rendang, Teh Talua, Langkitang, Soto Padang, Samba Lado, Gulai, Asin) users can give to posts
@@ -75,6 +75,13 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **Progression**: Algorithm runs → Scores calculated → Ranking updated → Display refreshed
 - **Success criteria**: Trending accurately reflects activity, updates regularly, showcases best content
 
+### Search Functionality
+- **Functionality**: Real-time search through thread titles and content with instant filtering
+- **Purpose**: Help users quickly find relevant discussions and past conversations
+- **Trigger**: Type in search bar on homepage
+- **Progression**: Enter query → Instant filtering of threads → Display matching results → Clear to reset
+- **Success criteria**: Search accurately matches titles and content, responds instantly, shows result counts, works across all categories
+
 ## Edge Case Handling
 
 - **Empty States**: Display culturally-appropriate messaging ("Lapau masih sepi, buek thread pertamo ko!") when no content exists
@@ -86,6 +93,9 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **Anonymous Posts**: Display consistent anonymous avatar/name while tracking real identity server-side
 - **Spam Prevention**: Rate limit thread creation based on user level
 - **Offensive Content**: Queue for immediate review when multiple "Ingatkan Adat" reports received
+- **No Search Results**: Show friendly message when search yields no matches
+- **Media Upload Limits**: Cap at 5 media items per thread to maintain performance
+- **Large Media Files**: Handle base64 encoding for images/videos with size awareness
 
 ## Design Direction
 

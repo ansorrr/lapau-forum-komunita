@@ -1,8 +1,9 @@
-import { ArrowLeft, User as UserIcon } from '@phosphor-icons/react'
+import { ArrowLeft } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
 import { Badge } from './ui/badge'
 import { USER_LEVELS } from '@/lib/constants'
+import { UserAvatar } from './UserAvatar'
 import type { User, Thread } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -34,9 +35,7 @@ export function UserProfile({ user, threads, isOwnProfile, onBack, onViewThread 
         <div className="p-6">
           <div className="flex gap-4 items-start mb-6">
             <div className="shrink-0">
-              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                <UserIcon size={40} weight="fill" />
-              </div>
+              <UserAvatar user={user} size="xl" />
             </div>
 
             <div className="flex-1">
