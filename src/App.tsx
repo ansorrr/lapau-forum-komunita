@@ -242,7 +242,7 @@ function App() {
           onViewProfile={() => currentUser && handleViewProfile(currentUser.id)}
         />
 
-        <main className="container mx-auto px-4 py-8 max-w-5xl">
+        <main className="container mx-auto px-4 py-6 max-w-7xl">
           {view === 'home' && (
             <ThreadList
               threads={threads || []}

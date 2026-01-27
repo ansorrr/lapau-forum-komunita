@@ -1,4 +1,4 @@
-import { ArrowLeft } from '@phosphor-icons/react'
+import { ArrowLeft, User as UserIcon } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
 import { Badge } from './ui/badge'
@@ -18,21 +18,33 @@ export function UserProfile({ user, threads, isOwnProfile, onBack, onViewThread 
   const levelInfo = USER_LEVELS[user.level]
 
   return (
-    <div className="space-y-6">
-      <Button variant="ghost" onClick={onBack} className="gap-2">
-        <ArrowLeft size={20} />
-        Kembali
+    <div className="space-y-4">
+      <Button variant="ghost" onClick={onBack} className="gap-2 hover:bg-secondary">
+        <ArrowLeft size={18} />
+        Kembali ke Forum
       </Button>
 
-      <Card className="p-6">
-        <div className="space-y-4">
-          <div className="flex items-start justify-between gap-4">
+      <Card>
+        <div className="border-b border-border bg-muted/30 px-6 py-3">
+          <h2 className="text-sm font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+            PROFIL PENGGUNA
+          </h2>
+        </div>
+
+        <div className="p-6">
+          <div className="flex gap-4 items-start mb-6">
+            <div className="shrink-0">
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <UserIcon size={40} weight="fill" />
+              </div>
+            </div>
+
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h1 className="text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
                 {user.username}
               </h1>
               
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap mb-3">
                 <Badge className="bg-primary text-primary-foreground">
                   {levelInfo.name}
                 </Badge>
@@ -42,60 +54,63 @@ export function UserProfile({ user, threads, isOwnProfile, onBack, onViewThread 
                   </Badge>
                 )}
               </div>
+
+              <div className="text-sm text-muted-foreground">
+                Anggota sajak {formatDistanceToNow(user.createdAt, { addSuffix: true })}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+          <div className="grid grid-cols-3 gap-4 p-4 bg-secondary/30 rounded-md">
             <div className="text-center">
-              <div className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+              <div className="text-2xl font-bold text-primary" style={{ fontFamily: 'var(--font-heading)' }}>
                 {user.totalPosts}
               </div>
-              <div className="text-sm text-muted-foreground">Thread</div>
+              <div className="text-xs text-muted-foreground">Total Thread</div>
             </div>
             
             <div className="text-center">
-              <div className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+              <div className="text-2xl font-bold text-primary" style={{ fontFamily: 'var(--font-heading)' }}>
                 {user.totalReactions}
               </div>
-              <div className="text-sm text-muted-foreground">Reaksi</div>
+              <div className="text-xs text-muted-foreground">Total Reaksi</div>
             </div>
             
             <div className="text-center">
-              <div className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+              <div className="text-2xl font-bold text-primary" style={{ fontFamily: 'var(--font-heading)' }}>
                 {threads.length}
               </div>
-              <div className="text-sm text-muted-foreground">Approved</div>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-border">
-            <div className="text-sm text-muted-foreground">
-              Bergabung {formatDistanceToNow(user.createdAt, { addSuffix: true })}
+              <div className="text-xs text-muted-foreground">Approved</div>
             </div>
           </div>
         </div>
       </Card>
 
-      <div>
-        <h2 className="text-xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-          Thread {isOwnProfile ? 'Saya' : `dari ${user.username}`}
-        </h2>
+      <Card>
+        <div className="border-b border-border bg-muted/30 px-6 py-3">
+          <h2 className="text-sm font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+            THREAD {isOwnProfile ? 'SAYA' : `DARI ${user.username.toUpperCase()}`}
+          </h2>
+        </div>
         
         {threads.length === 0 ? (
-          <Card className="p-8 text-center text-muted-foreground">
-            <p>Belum ada thread yang diposting</p>
-          </Card>
+          <div className="p-12 text-center text-muted-foreground">
+            <p className="font-medium">Balun ado thread</p>
+            <p className="text-sm mt-1">Belum membuat thread</p>
+          </div>
         ) : (
-          <div className="space-y-3">
+          <div className="divide-y divide-border">
             {threads.map((thread) => (
-              <Card 
+              <div
                 key={thread.id}
-                className="p-4 cursor-pointer hover:shadow-md transition-shadow"
+                className="px-6 py-4 cursor-pointer hover:bg-muted/30 transition-colors"
                 onClick={() => onViewThread(thread.id)}
               >
-                <h3 className="font-semibold mb-1">{thread.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">{thread.content}</p>
-                <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
+                <h3 className="font-semibold mb-1 hover:text-primary transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {thread.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{thread.content}</p>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
                   <span>{thread.commentCount} komentar</span>
                   <span>•</span>
                   <span>
@@ -104,11 +119,11 @@ export function UserProfile({ user, threads, isOwnProfile, onBack, onViewThread 
                   <span>•</span>
                   <span>{formatDistanceToNow(thread.createdAt, { addSuffix: true })}</span>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

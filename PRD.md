@@ -89,23 +89,23 @@ This is a full-featured forum platform with user authentication, role-based acce
 
 ## Design Direction
 
-The design should evoke the warmth and authenticity of a traditional Minangkabau coffee shop (lapau) - a welcoming community gathering space where people share stories over coffee. The interface should feel grounded, earthy, and conversational with subtle cultural motifs, warm browns and creams, and typography that balances modern readability with cultural character. Every interaction should reinforce the sense of belonging to a tight-knit community bound by shared values and respectful discourse.
+The design should evoke a familiar, organized forum experience similar to Kaskus - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a sidebar-based category navigation, table-like thread listings, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery.
 
 ## Color Selection
 
-Warm, earthy palette inspired by traditional lapau - coffee, spices, and natural materials:
+Modern purple-based palette inspired by contemporary forums with excellent contrast:
 
-- **Primary Color**: Rich Coffee Brown `oklch(0.35 0.05 60)` - Represents the warmth and depth of community conversation, used for primary actions and important elements
+- **Primary Color**: Deep Purple `oklch(0.45 0.15 280)` - Main brand color for actions and interactive elements, provides strong visual identity
 - **Secondary Colors**: 
-  - Warm Cream `oklch(0.92 0.02 80)` - Subtle backgrounds and cards, provides breathing room
-  - Deep Green `oklch(0.42 0.06 160)` - Approval actions, success states, represents growth
-  - Charcoal `oklch(0.25 0.01 60)` - Text and borders, maintains readability without harshness
-- **Accent Color**: Spicy Orange `oklch(0.68 0.15 50)` - Hot actions, highlights, notifications, captures the "pedas" spirit
+  - Light Gray `oklch(0.96 0.01 280)` - Subtle backgrounds for secondary content areas
+  - Success Green `oklch(0.55 0.15 145)` - Approval actions, success states
+  - Near Black `oklch(0.20 0.015 280)` - Text with a slight purple tint for cohesion
+- **Accent Color**: Vibrant Orange `oklch(0.65 0.20 35)` - Call-to-action highlights, important notifications
 - **Foreground/Background Pairings**: 
-  - Primary Brown `oklch(0.35 0.05 60)`: Cream text `oklch(0.97 0.01 80)` - Ratio 7.2:1 ✓
-  - Cream Background `oklch(0.92 0.02 80)`: Charcoal text `oklch(0.25 0.01 60)` - Ratio 10.1:1 ✓
-  - Accent Orange `oklch(0.68 0.15 50)`: White text `oklch(1 0 0)` - Ratio 4.9:1 ✓
-  - Deep Green `oklch(0.42 0.06 160)`: Cream text `oklch(0.97 0.01 80)` - Ratio 8.4:1 ✓
+  - Primary Purple `oklch(0.45 0.15 280)`: White text `oklch(1 0 0)` - Ratio 8.2:1 ✓
+  - Light Background `oklch(0.98 0.005 280)`: Dark text `oklch(0.20 0.015 280)` - Ratio 15.1:1 ✓
+  - Accent Orange `oklch(0.65 0.20 35)`: White text `oklch(1 0 0)` - Ratio 4.6:1 ✓
+  - Success Green `oklch(0.55 0.15 145)`: White text `oklch(1 0 0)` - Ratio 5.8:1 ✓
 
 ## Font Selection
 
@@ -125,61 +125,65 @@ Typography should balance modern web readability with a warm, approachable perso
 
 ## Animations
 
-Animations should feel warm and organic - like natural conversations flowing, not mechanical transitions. Use subtle motion to guide attention and provide feedback, with a focus on micro-interactions that delight without distracting. Reaction animations should feel playful and satisfying (emoji bounce/scale), while navigation should be smooth and grounded. Avoid aggressive motion; prefer gentle fades and subtle scaling that reinforce the relaxed lapau atmosphere.
+Animations should be quick and efficient - prioritizing content over motion. Use subtle transitions for state changes (150-200ms) with smooth easing. Hover states provide instant feedback without delay. Reaction animations offer a brief playful moment (bounce effect) but don't impede workflow. Page transitions are minimal to maintain focus on content discovery and reading.
 
 ## Component Selection
 
 - **Components**: 
-  - Dialog: Thread creation form, login/register modals
-  - Card: Individual thread items, comment containers, user profile cards
-  - Button: Primary actions with distinct variants for approve/reject
+  - Card: Thread list container, individual sections with headers
+  - Button: Actions with clear hierarchy (primary for approve, outline for secondary, ghost for tertiary)
   - Textarea: Thread content and comment input
-  - Select: Category picker, filter dropdowns
-  - Badge: User levels, category tags, status indicators
-  - Tabs: Switch between categories, trending time periods
-  - Avatar: User identities throughout
-  - Alert: Moderation notices, system messages
-  - Separator: Visual breaks between sections
-  - Scroll Area: Long comment threads, content feeds
-  - Tooltip: Hover definitions for Minangkabau terms (Kamus Lapau)
+  - Select/Dropdown: Mobile category selector
+  - Badge: Category tags, user levels, notification counts
+  - Tabs: Admin panel sections, content organization
+  - Dialog: Thread creation, rejection notes, confirmations
+  - Separator: Visual breaks within content
+  - Scroll Area: Long comment threads
+  - Tooltip: Hover definitions for Minangkabau terms
+  - Checkbox: Anonymous posting option
   
 - **Customizations**: 
-  - Reaction button grid (custom component): 8 emoji reactions with counts
-  - Level badge component: Custom styled badges showing rank progression
-  - Thread card: Rich card with category tag, reaction summary, metadata
-  - Moderation queue item: Approve/reject actions with note capability
-  - Nested comment tree: Custom recursive component for threaded discussions
+  - Sidebar navigation: Persistent category list with thread counts
+  - Table-like thread rows: Compact listing with metadata columns
+  - Gradient header: Purple gradient for main header bar
+  - Reaction button bar: Horizontal list of emoji reactions with counts
+  - Nested comments: Indented replies with left border indicator
+  - Section headers: Card headers with background color and uppercase labels
   
 - **States**: 
-  - Buttons: Default (earthy), hover (lift shadow slightly), active (press down), disabled (desaturated)
-  - Thread cards: Default, hover (subtle scale 1.01), selected/active category highlight
-  - Reactions: Unselected (grayscale), selected (full color + scale), animated on click (bounce)
-  - Inputs: Default (cream bg), focus (accent border glow), error (destructive border)
+  - Buttons: Solid fills for actions, clear hover darkening, active press state
+  - Thread rows: Subtle background change on hover (no scale/shadow)
+  - Category items: Selected state with primary color background and white text
+  - Reactions: Show top 3 with counts, click to toggle
+  - Inputs: Simple border focus, no elaborate effects
   
 - **Icon Selection**: 
-  - @phosphor-icons/react for all UI actions:
+  - @phosphor-icons/react for all UI:
   - Plus for create thread
-  - ChatCircle for comments
-  - Warning for reports ("Ingatkan Adat")
-  - Crown for admin badge
-  - TrendUp for trending
-  - FunnelSimple for filters
+  - ChatCircle for comments/replies
+  - Warning for reports
+  - ShieldCheck for admin access
+  - User for profiles/avatars
+  - House for home navigation
   - Check/X for approve/reject
+  - ArrowLeft for back navigation
+  - Crown for "Petuah" designation
+  - Eye for view/preview
+  - Trash for delete
   - Emoji reactions use actual emoji (🍛☕🐌🍜🌶️🥥🧂)
   
 - **Spacing**: 
-  - Card padding: p-6
-  - Section gaps: gap-8
-  - List items: gap-4
-  - Inline elements: gap-2
-  - Page margins: px-4 md:px-8
-  - Max content width: max-w-5xl
+  - Compact padding: p-3 to p-6 for cards
+  - Tight gaps: gap-2 to gap-4 for most layouts
+  - Consistent borders: 1px borders throughout
+  - Content max-width: max-w-7xl for wide layout
+  - Sidebar width: w-64 on desktop
   
 - **Mobile**: 
-  - Single column layout on mobile
-  - Collapsible category filter into dropdown
-  - Bottom sheet for thread creation
-  - Sticky action buttons for quick posting
-  - Condensed reaction display (show count, expand on tap)
-  - Simplified admin dashboard with priority queue first
+  - Sidebar collapses to dropdown selector
+  - Single column thread list
+  - Smaller avatar/icons
+  - Stacked metadata in thread rows
+  - Bottom-aligned action buttons
   - Touch-friendly tap targets (min 44px)
+  - Simplified admin interface with tabs

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
+import { Card } from './ui/card'
 import { Badge } from './ui/badge'
 import { CATEGORIES } from '@/lib/constants'
 import type { Thread, User } from '@/lib/types'
@@ -24,8 +24,6 @@ export function ThreadList({
   onReaction,
   onReport,
 }: ThreadListProps) {
-  const [timeFilter, setTimeFilter] = useState<'daily' | 'weekly'>('daily')
-
   const approvedThreads = threads.filter(t => t.status === 'approved')
   
   const filteredThreads = selectedCategory === 'all'
@@ -42,108 +40,141 @@ export function ThreadList({
 
   const displayThreads = filteredThreads.sort((a, b) => b.createdAt - a.createdAt)
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-          Kategori
-        </h2>
-        <Tabs value={selectedCategory} onValueChange={onSelectCategory}>
-          <TabsList className="flex flex-wrap h-auto gap-2 bg-transparent">
-            <TabsTrigger 
-              value="all" 
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              Semua
-            </TabsTrigger>
-            {CATEGORIES.map((cat) => (
-              <TabsTrigger
-                key={cat.id}
-                value={cat.id}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-              >
-                {cat.emoji} {cat.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      </div>
+  const getCategoryThreadCount = (categoryId: string) => {
+    if (categoryId === 'all') return approvedThreads.length
+    return approvedThreads.filter(t => t.category === categoryId).length
+  }
 
-      {selectedCategory === 'all' && trendingThreads.length > 0 && (
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
-              🔥 Lapau Paling Rami
-            </h2>
-            <div className="flex gap-2">
+  return (
+    <div className="flex gap-4">
+      <aside className="hidden lg:block w-64 shrink-0">
+        <Card className="p-4 sticky top-24">
+          <h3 className="font-bold text-sm mb-3 text-foreground" style={{ fontFamily: 'var(--font-heading)' }}>
+            KATEGORI FORUM
+          </h3>
+          <div className="space-y-1">
+            <button
+              onClick={() => onSelectCategory('all')}
+              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors flex items-center justify-between ${
+                selectedCategory === 'all'
+                  ? 'bg-primary text-primary-foreground font-medium'
+                  : 'hover:bg-secondary text-foreground'
+              }`}
+            >
+              <span>📋 Semua Thread</span>
+              <Badge variant="secondary" className={selectedCategory === 'all' ? 'bg-white/20 text-white' : ''}>
+                {getCategoryThreadCount('all')}
+              </Badge>
+            </button>
+            
+            {CATEGORIES.map((cat) => (
               <button
-                onClick={() => setTimeFilter('daily')}
-                className={`text-sm px-3 py-1 rounded-md transition-colors ${
-                  timeFilter === 'daily'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
+                key={cat.id}
+                onClick={() => onSelectCategory(cat.id)}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors flex items-center justify-between ${
+                  selectedCategory === cat.id
+                    ? 'bg-primary text-primary-foreground font-medium'
+                    : 'hover:bg-secondary text-foreground'
                 }`}
               >
-                Harian
+                <span>{cat.emoji} {cat.name}</span>
+                <Badge variant="secondary" className={selectedCategory === cat.id ? 'bg-white/20 text-white' : ''}>
+                  {getCategoryThreadCount(cat.id)}
+                </Badge>
               </button>
-              <button
-                onClick={() => setTimeFilter('weekly')}
-                className={`text-sm px-3 py-1 rounded-md transition-colors ${
-                  timeFilter === 'weekly'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Mingguan
-              </button>
+            ))}
+          </div>
+
+          {trendingThreads.length > 0 && (
+            <div className="mt-6">
+              <h3 className="font-bold text-sm mb-3 text-foreground" style={{ fontFamily: 'var(--font-heading)' }}>
+                🔥 LAPAU PALING RAMI
+              </h3>
+              <div className="space-y-2">
+                {trendingThreads.map((thread, index) => {
+                  const category = CATEGORIES.find(c => c.id === thread.category)
+                  return (
+                    <button
+                      key={thread.id}
+                      onClick={() => onViewThread(thread.id)}
+                      className="w-full text-left p-2 rounded-md hover:bg-secondary transition-colors text-xs"
+                    >
+                      <div className="flex items-start gap-2">
+                        <span className="font-bold text-accent shrink-0">#{index + 1}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="line-clamp-2 font-medium text-foreground mb-1">
+                            {thread.title}
+                          </div>
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <span>{category?.emoji}</span>
+                            <span>•</span>
+                            <span>{thread.commentCount} balasan</span>
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </Card>
+      </aside>
+
+      <div className="flex-1 min-w-0">
+        <div className="lg:hidden mb-4">
+          <Card className="p-3">
+            <select
+              value={selectedCategory}
+              onChange={(e) => onSelectCategory(e.target.value)}
+              className="w-full px-3 py-2 rounded-md border border-border bg-background text-sm"
+            >
+              <option value="all">📋 Semua Thread ({getCategoryThreadCount('all')})</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.emoji} {cat.name} ({getCategoryThreadCount(cat.id)})
+                </option>
+              ))}
+            </select>
+          </Card>
+        </div>
+
+        <Card>
+          <div className="border-b border-border bg-muted/30 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <h2 className="font-bold text-sm" style={{ fontFamily: 'var(--font-heading)' }}>
+                {selectedCategory === 'all' 
+                  ? 'SEMUA THREAD' 
+                  : CATEGORIES.find(c => c.id === selectedCategory)?.name.toUpperCase()
+                }
+              </h2>
+              <span className="text-xs text-muted-foreground">
+                {displayThreads.length} thread
+              </span>
             </div>
           </div>
-          <div className="space-y-3">
-            {trendingThreads.map((thread, index) => (
-              <div key={thread.id} className="flex gap-3">
-                <Badge 
-                  variant="outline" 
-                  className="h-6 w-6 flex items-center justify-center shrink-0 border-accent text-accent"
-                >
-                  {index + 1}
-                </Badge>
+
+          {displayThreads.length === 0 ? (
+            <div className="text-center py-16 px-4">
+              <div className="text-4xl mb-3">☕</div>
+              <p className="text-lg font-medium text-muted-foreground mb-1">Lapau masih sepi</p>
+              <p className="text-sm text-muted-foreground">Buek thread pertamo ko!</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-border">
+              {displayThreads.map((thread) => (
                 <ThreadCard
+                  key={thread.id}
                   thread={thread}
                   currentUser={currentUser}
                   onViewThread={onViewThread}
                   onReaction={onReaction}
                   onReport={onReport}
                 />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div>
-        <h2 className="text-xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-          {selectedCategory === 'all' ? 'Thread Terbaru' : CATEGORIES.find(c => c.id === selectedCategory)?.name}
-        </h2>
-        
-        {displayThreads.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            <p className="text-lg">Lapau masih sepi</p>
-            <p className="text-sm mt-1">Buek thread pertamo ko!</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {displayThreads.map((thread) => (
-              <ThreadCard
-                key={thread.id}
-                thread={thread}
-                currentUser={currentUser}
-                onViewThread={onViewThread}
-                onReaction={onReaction}
-                onReport={onReport}
-              />
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </Card>
       </div>
     </div>
   )

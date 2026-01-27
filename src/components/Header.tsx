@@ -1,5 +1,6 @@
-import { Plus, SignOut, User, ShieldCheck } from '@phosphor-icons/react'
+import { Plus, SignOut, User, ShieldCheck, House, ChatCircle } from '@phosphor-icons/react'
 import { Button } from './ui/button'
+import { USER_LEVELS } from '@/lib/constants'
 import type { User as UserType } from '@/lib/types'
 
 interface HeaderProps {
@@ -24,65 +25,112 @@ export function Header({
   onViewProfile,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-5xl">
-        <button
-          onClick={onNavigateHome}
-          className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors"
-          style={{ fontFamily: 'var(--font-heading)' }}
-        >
-          ☕ Lapau
-        </button>
+    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      <div className="kaskus-sidebar-gradient text-white">
+        <div className="container mx-auto px-4 py-2">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onNavigateHome}
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+            >
+              <div className="text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
+                ☕ LAPAU
+              </div>
+              <div className="hidden sm:block text-xs opacity-90">
+                Forum Komunitas Minangkabau
+              </div>
+            </button>
 
-        <div className="flex items-center gap-2">
-          {currentUser ? (
-            <>
-              <Button
-                onClick={onCreateThread}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
-              >
-                <Plus size={20} weight="bold" />
-                <span className="hidden sm:inline">Buek Thread</span>
-              </Button>
+            <div className="flex items-center gap-2">
+              {currentUser ? (
+                <>
+                  <div className="hidden md:flex items-center gap-2 mr-2 px-3 py-1.5 bg-white/10 rounded-md">
+                    <User size={16} weight="fill" />
+                    <span className="text-sm font-medium">{currentUser.username}</span>
+                    <span className="text-xs opacity-75">
+                      ({USER_LEVELS[currentUser.level].name})
+                    </span>
+                  </div>
 
-              {currentUser.role === 'admin' && (
-                <Button
-                  onClick={onNavigateAdmin}
-                  variant="outline"
-                  size="icon"
-                  className="border-success text-success hover:bg-success/10"
-                >
-                  <ShieldCheck size={20} weight="fill" />
-                </Button>
+                  <Button
+                    onClick={onCreateThread}
+                    size="sm"
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground gap-1.5"
+                  >
+                    <Plus size={18} weight="bold" />
+                    <span className="hidden sm:inline">Buek Thread</span>
+                  </Button>
+
+                  {currentUser.role === 'admin' && (
+                    <Button
+                      onClick={onNavigateAdmin}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:bg-white/20"
+                    >
+                      <ShieldCheck size={20} weight="fill" />
+                    </Button>
+                  )}
+
+                  <Button
+                    onClick={onViewProfile}
+                    variant="ghost"
+                    size="sm"
+                    className="text-white hover:bg-white/20"
+                  >
+                    <User size={20} weight="fill" />
+                  </Button>
+
+                  <Button
+                    onClick={onLogout}
+                    variant="ghost"
+                    size="sm"
+                    className="text-white/80 hover:bg-white/20 hover:text-white"
+                  >
+                    <SignOut size={18} />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    onClick={onLogin} 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-white hover:bg-white/20"
+                  >
+                    Masuk Lapau
+                  </Button>
+                  <Button 
+                    onClick={onRegister}
+                    size="sm"
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                  >
+                    Daftar Duduak
+                  </Button>
+                </>
               )}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <Button
-                onClick={onViewProfile}
-                variant="outline"
-                size="icon"
-              >
-                <User size={20} weight="fill" />
-              </Button>
-
-              <Button
-                onClick={onLogout}
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <SignOut size={20} />
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button onClick={onLogin} variant="ghost">
-                Masuk Lapau
-              </Button>
-              <Button onClick={onRegister} className="bg-primary hover:bg-primary/90">
-                Daftar Duduak
-              </Button>
-            </>
-          )}
+      <div className="bg-white border-b border-border">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-6 h-10">
+            <button
+              onClick={onNavigateHome}
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              <House size={16} weight="fill" />
+              <span>Berando</span>
+            </button>
+            <button
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              <ChatCircle size={16} weight="fill" />
+              <span>Thread Terbaru</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>

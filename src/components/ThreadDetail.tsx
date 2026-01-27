@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ChatCircle, Warning } from '@phosphor-icons/react'
+import { ArrowLeft, ChatCircle, Warning, User } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
 import { Badge } from './ui/badge'
@@ -9,7 +9,7 @@ import { Label } from './ui/label'
 import { Separator } from './ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
-import type { Thread, Comment, User } from '@/lib/types'
+import type { Thread, Comment, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 import { CommentItem } from './CommentItem'
 import { toast } from 'sonner'
@@ -17,7 +17,7 @@ import { toast } from 'sonner'
 interface ThreadDetailProps {
   thread: Thread
   comments: Comment[]
-  currentUser: User | null
+  currentUser: UserType | null
   onBack: () => void
   onReaction: (threadId: string, reaction: string) => void
   onAddComment: (threadId: string, content: string, parentId?: string, isAnonymous?: boolean) => void
@@ -73,39 +73,54 @@ export function ThreadDetail({
   }
 
   return (
-    <div className="space-y-6">
-      <Button variant="ghost" onClick={onBack} className="gap-2">
-        <ArrowLeft size={20} />
-        Kembali
+    <div className="space-y-4">
+      <Button variant="ghost" onClick={onBack} className="gap-2 hover:bg-secondary">
+        <ArrowLeft size={18} />
+        Kembali ke Forum
       </Button>
 
-      <Card className="p-6">
-        <div className="space-y-4">
+      <Card>
+        <div className="border-b border-border bg-muted/30 px-6 py-3">
           <div className="flex items-center gap-2 flex-wrap">
             {category && (
-              <Badge variant="secondary">
+              <Badge className="bg-primary/10 text-primary border-0">
                 {category.emoji} {category.name}
               </Badge>
             )}
-            <button
-              onClick={() => !thread.isAnonymous && onViewProfile(thread.authorId)}
-              className={`text-sm text-muted-foreground ${!thread.isAnonymous && 'hover:text-foreground hover:underline'}`}
-              disabled={thread.isAnonymous}
-            >
-              {thread.authorUsername}
-            </button>
-            <span className="text-sm text-muted-foreground">•</span>
-            <span className="text-sm text-muted-foreground">
-              {formatDistanceToNow(thread.createdAt, { addSuffix: true })}
-            </span>
           </div>
+        </div>
 
-          <h1 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
-            {thread.title}
-          </h1>
+        <div className="p-6 space-y-4">
+          <div className="flex gap-4">
+            <div className="shrink-0 hidden sm:block">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <User size={24} weight="fill" />
+              </div>
+            </div>
 
-          <div className="prose prose-sm max-w-none">
-            <p className="whitespace-pre-wrap">{thread.content}</p>
+            <div className="flex-1 space-y-3">
+              <div className="flex items-center gap-2 text-sm">
+                <button
+                  onClick={() => !thread.isAnonymous && onViewProfile(thread.authorId)}
+                  className={`font-semibold ${!thread.isAnonymous ? 'text-primary hover:underline' : 'text-foreground'}`}
+                  disabled={thread.isAnonymous}
+                >
+                  {thread.authorUsername}
+                </button>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-muted-foreground">
+                  {formatDistanceToNow(thread.createdAt, { addSuffix: true })}
+                </span>
+              </div>
+
+              <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'var(--font-heading)' }}>
+                {thread.title}
+              </h1>
+
+              <div className="prose prose-sm max-w-none text-foreground">
+                <p className="whitespace-pre-wrap leading-relaxed">{thread.content}</p>
+              </div>
+            </div>
           </div>
 
           <Separator />
@@ -125,9 +140,10 @@ export function ThreadDetail({
                           size="sm"
                           onClick={() => canReact && onReaction(thread.id, key)}
                           disabled={!canReact}
-                          className={isActive ? 'bg-accent hover:bg-accent/90 reaction-bounce' : ''}
+                          className={isActive ? 'bg-primary hover:bg-primary/90 reaction-bounce' : ''}
                         >
-                          {reaction.emoji} {count > 0 && count}
+                          <span className="text-base">{reaction.emoji}</span>
+                          {count > 0 && <span className="ml-1">{count}</span>}
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -151,7 +167,7 @@ export function ThreadDetail({
                 onClick={() => onReport(thread.id)}
                 className="text-destructive border-destructive hover:bg-destructive/10"
               >
-                <Warning size={18} weight="bold" />
+                <Warning size={16} weight="bold" />
                 <span className="ml-2">Ingatkan Adat</span>
               </Button>
             )}
@@ -159,19 +175,21 @@ export function ThreadDetail({
         </div>
       </Card>
 
-      <div>
-        <h2 className="text-xl font-bold mb-4 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
-          <ChatCircle size={24} weight="fill" />
-          {comments.length} Komentar
-        </h2>
+      <Card>
+        <div className="border-b border-border bg-muted/30 px-6 py-3">
+          <h2 className="text-sm font-bold flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
+            <ChatCircle size={18} weight="fill" />
+            {comments.length} KOMENTAR
+          </h2>
+        </div>
 
         {currentUser && (
-          <Card className="p-4 mb-4">
+          <div className="p-6 border-b border-border bg-secondary/30">
             <div className="space-y-3">
               {replyingTo && (
                 <div className="text-sm text-muted-foreground">
                   Membalas komentar...{' '}
-                  <button onClick={() => setReplyingTo(null)} className="text-accent hover:underline">
+                  <button onClick={() => setReplyingTo(null)} className="text-primary hover:underline font-medium">
                     Batal
                   </button>
                 </div>
@@ -181,7 +199,7 @@ export function ThreadDetail({
                 placeholder="Tulisan komentar di siko..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                rows={3}
+                rows={4}
                 className="resize-none"
               />
               
@@ -196,7 +214,7 @@ export function ThreadDetail({
                     htmlFor="comment-anonymous"
                     className="text-sm cursor-pointer text-muted-foreground"
                   >
-                    Anonim
+                    Posting sebagai Anonim
                   </Label>
                 </div>
                 
@@ -205,16 +223,17 @@ export function ThreadDetail({
                 </Button>
               </div>
             </div>
-          </Card>
+          </div>
         )}
 
         {comments.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <p>Balun ado komentar</p>
+          <div className="text-center py-12 px-4 text-muted-foreground">
+            <ChatCircle size={48} weight="thin" className="mx-auto mb-3 opacity-30" />
+            <p className="font-medium">Balun ado komentar</p>
             <p className="text-sm mt-1">Jadilah yang pertamo berkomentar!</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="divide-y divide-border">
             {rootComments.map((comment) => (
               <CommentItem
                 key={comment.id}
@@ -229,7 +248,7 @@ export function ThreadDetail({
             ))}
           </div>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

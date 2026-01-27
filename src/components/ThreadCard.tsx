@@ -1,15 +1,14 @@
-import { ChatCircle, Warning } from '@phosphor-icons/react'
-import { Card } from './ui/card'
+import { ChatCircle, Warning, User } from '@phosphor-icons/react'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
-import type { Thread, User } from '@/lib/types'
+import type { Thread, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 
 interface ThreadCardProps {
   thread: Thread
-  currentUser: User | null
+  currentUser: UserType | null
   onViewThread: (threadId: string) => void
   onReaction: (threadId: string, reaction: string) => void
   onReport: (threadId: string) => void
@@ -25,95 +24,100 @@ export function ThreadCard({ thread, currentUser, onViewThread, onReaction, onRe
 
   const canReact = currentUser && (thread.authorId !== currentUser.id || thread.isAnonymous)
 
+  const topReactions = Object.entries(thread.reactions)
+    .map(([key, users]) => ({ key, count: users.length, emoji: REACTIONS[key as keyof typeof REACTIONS].emoji }))
+    .filter(r => r.count > 0)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+
   return (
-    <Card 
-      className="p-6 cursor-pointer thread-card-hover"
+    <div 
+      className="px-4 py-3 thread-row-hover cursor-pointer"
       onClick={() => onViewThread(thread.id)}
     >
-      <div className="flex flex-col gap-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              {category && (
-                <Badge variant="secondary" className="shrink-0">
-                  {category.emoji} {category.name}
-                </Badge>
-              )}
-              <span className="text-sm text-muted-foreground truncate">
-                {thread.authorUsername}
-              </span>
-              <span className="text-sm text-muted-foreground">•</span>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="text-sm text-muted-foreground hover:text-foreground cursor-help">
-                      {formatDistanceToNow(thread.createdAt, { addSuffix: true })}
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {new Date(thread.createdAt).toLocaleString('id-ID')}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            
-            <h3 className="text-lg font-semibold mb-2 line-clamp-2" style={{ fontFamily: 'var(--font-heading)' }}>
-              {thread.title}
-            </h3>
-            
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {thread.content}
-            </p>
+      <div className="flex items-start gap-3">
+        <div className="shrink-0 hidden sm:flex flex-col items-center">
+          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <User size={20} weight="fill" />
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <ChatCircle size={18} weight="fill" />
-              <span>{thread.commentCount}</span>
-            </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start gap-2 mb-1">
+            {category && (
+              <Badge 
+                variant="secondary" 
+                className="shrink-0 text-xs px-2 py-0.5 bg-primary/10 text-primary border-0"
+              >
+                {category.emoji} {category.name}
+              </Badge>
+            )}
+          </div>
 
-            <div className="flex items-center gap-1">
-              {Object.entries(REACTIONS).slice(0, 3).map(([key, reaction]) => {
-                const count = thread.reactions[key as keyof typeof thread.reactions]?.length || 0
-                if (count === 0) return null
-                
-                return (
-                  <TooltipProvider key={key}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            if (canReact) {
-                              onReaction(thread.id, key)
-                            }
-                          }}
-                          className={`text-sm px-2 py-1 rounded-md transition-all ${
-                            userReaction === key
-                              ? 'bg-accent/20 reaction-bounce'
-                              : 'hover:bg-secondary'
-                          }`}
-                          disabled={!canReact}
-                        >
-                          {reaction.emoji} {count}
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {KAMUS_LAPAU[reaction.name] || reaction.description}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )
-              })}
-              
-              {totalReactions > 0 && (
-                <span className="text-sm text-muted-foreground ml-1">
-                  {totalReactions} reaksi
-                </span>
-              )}
-            </div>
+          <h3 
+            className="text-base font-semibold mb-1 hover:text-primary transition-colors line-clamp-2" 
+            style={{ fontFamily: 'var(--font-heading)' }}
+          >
+            {thread.title}
+          </h3>
+
+          <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+            <span className="font-medium text-foreground">{thread.authorUsername}</span>
+            <span>•</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="hover:text-foreground cursor-help">
+                    {formatDistanceToNow(thread.createdAt, { addSuffix: true })}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {new Date(thread.createdAt).toLocaleString('id-ID')}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+
+        <div className="shrink-0 flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2">
+            {topReactions.map((reaction) => (
+              <TooltipProvider key={reaction.key}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (canReact) {
+                          onReaction(thread.id, reaction.key)
+                        }
+                      }}
+                      className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all ${
+                        userReaction === reaction.key
+                          ? 'bg-accent/20 text-accent font-medium reaction-bounce'
+                          : 'hover:bg-secondary'
+                      }`}
+                      disabled={!canReact}
+                    >
+                      <span>{reaction.emoji}</span>
+                      <span>{reaction.count}</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {KAMUS_LAPAU[REACTIONS[reaction.key as keyof typeof REACTIONS].name] || REACTIONS[reaction.key as keyof typeof REACTIONS].description}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
+            
+            {totalReactions === 0 && (
+              <span className="text-xs text-muted-foreground">—</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 min-w-[60px] justify-end">
+            <ChatCircle size={16} weight="fill" className="text-muted-foreground" />
+            <span className="text-sm font-medium">{thread.commentCount}</span>
           </div>
 
           {currentUser && thread.authorId !== currentUser.id && (
@@ -124,14 +128,13 @@ export function ThreadCard({ thread, currentUser, onViewThread, onReaction, onRe
                 e.stopPropagation()
                 onReport(thread.id)
               }}
-              className="text-muted-foreground hover:text-destructive shrink-0"
+              className="text-muted-foreground hover:text-destructive p-2 h-auto hidden lg:flex"
             >
-              <Warning size={18} />
-              <span className="ml-1 hidden sm:inline">Ingatkan Adat</span>
+              <Warning size={16} />
             </Button>
           )}
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
