@@ -82,6 +82,27 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **Progression**: Enter query → Instant filtering of threads → Display matching results → Clear to reset
 - **Success criteria**: Search accurately matches titles and content, responds instantly, shows result counts, works across all categories
 
+### Lapau Premium (Monetization)
+- **Functionality**: Subscription service offering exclusive features: 4 premium reactions (Pical, Martabak Kubang, Kopi Khop, Sarikayo), golden username color with glow effect, crown badge displayed on all posts/comments
+- **Purpose**: Generate sustainable revenue while enhancing user experience with special features
+- **Trigger**: Click "Upgrade Premium" in navigation or profile
+- **Progression**: View benefits → See pricing (Rp 29,000/month) → Confirm upgrade → Instant activation → Premium features enabled
+- **Success criteria**: Premium users have distinct visual identity, access to exclusive reactions, payment processed seamlessly, non-intrusive to free users
+
+### UMKM Verification (Business Support)
+- **Functionality**: Verification system for small business owners to get verified badge, post in UMKM category, and access sponsored thread placement
+- **Purpose**: Support local Minang businesses while creating authentic advertising opportunities
+- **Trigger**: Click "Verifikasi UMKM" in navigation
+- **Progression**: Enter business name → Add description → Submit for review → Admin approval → Green storefront badge displayed
+- **Success criteria**: Verified UMKM users can post business threads, display verified badge, threads can be sponsored/featured
+
+### Lapau Ads (Soft Advertising)
+- **Functionality**: Non-intrusive banner ads in sidebar and between threads, clearly labeled "Lapau Ads", clickable with tracking
+- **Purpose**: Generate revenue through business advertising while maintaining user experience
+- **Trigger**: Automatic display based on placement rules
+- **Progression**: Ad loads → Impression tracked → User clicks → Opens in new tab → Click tracked
+- **Success criteria**: Ads blend with design, clearly identified, not disruptive, track metrics accurately, support local businesses
+
 ## Edge Case Handling
 
 - **Empty States**: Display culturally-appropriate messaging ("Lapau masih sepi, buek thread pertamo ko!") when no content exists
@@ -98,10 +119,14 @@ This is a full-featured forum platform with user authentication, role-based acce
 - **Large Media Files**: Handle base64 encoding for images/videos with size awareness
 - **Video Thumbnails**: Automatically generate and display thumbnails for video content to improve preview experience and reduce initial load
 - **Thumbnail Generation Failure**: Gracefully handle cases where thumbnail generation fails by showing video icon placeholder
+- **Premium Feature Access**: Block premium reactions for non-premium users, show upgrade prompt
+- **UMKM Verification Pending**: Show pending status while admin reviews verification request
+- **Ad Loading Failures**: Gracefully handle missing ad images or broken links
+- **Zero Ads Available**: Don't show empty ad spaces when no active campaigns exist
 
 ## Design Direction
 
-The design should evoke a familiar, organized forum experience similar to Kaskus - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a sidebar-based category navigation, thread listings with prominent media previews, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery, with eye-catching imagery that brings threads to life.
+The design should evoke a familiar, organized forum experience similar to Kaskus - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a sidebar-based category navigation, thread listings with prominent media previews, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery, with eye-catching imagery that brings threads to life. Monetization elements (premium badges, UMKM verification, ads) are integrated subtly to enhance rather than disrupt the experience.
 
 ## Color Selection
 

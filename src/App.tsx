@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
-import type { User, Thread, Comment, Report, Media } from './lib/types'
+import type { User, Thread, Comment, Report, Media, Advertisement } from './lib/types'
 import { generateAvatarColor } from './lib/utils'
 import { initializeSeedData } from './lib/seedData'
 import { Header } from './components/Header'
@@ -11,7 +11,10 @@ import { ThreadDetail } from './components/ThreadDetail'
 import { AdminPanel } from './components/AdminPanel'
 import { UserProfile } from './components/UserProfile'
 import { SearchBar } from './components/SearchBar'
+import { PremiumDialog } from './components/PremiumDialog'
+import { UMKMVerificationDialog } from './components/UMKMVerificationDialog'
 import { Toaster } from './components/ui/sonner'
+import { toast } from 'sonner'
 
 type View = 'home' | 'thread' | 'admin' | 'profile'
 
@@ -20,10 +23,11 @@ function App() {
   const [threads, setThreads] = useKV<Thread[]>('threads', [])
   const [comments, setComments] = useKV<Comment[]>('comments', [])
   const [reports, setReports] = useKV<Report[]>('reports', [])
+  const [ads, setAds] = useKV<Advertisement[]>('ads', [])
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
   
   useEffect(() => {
-    const seedData = initializeSeedData(users || [], threads || [], comments || [])
+    const seedData = initializeSeedData(users || [], threads || [], comments || [], ads || [])
     if (seedData.users.length > 0 && (users || []).length === 0) {
       setUsers(seedData.users)
     }
@@ -32,6 +36,9 @@ function App() {
     }
     if (seedData.comments.length > 0 && (comments || []).length === 0) {
       setComments(seedData.comments)
+    }
+    if (seedData.ads.length > 0 && (ads || []).length === 0) {
+      setAds(seedData.ads)
     }
   }, [])
 
@@ -43,6 +50,8 @@ function App() {
   const [authDialogOpen, setAuthDialogOpen] = useState(false)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [createThreadOpen, setCreateThreadOpen] = useState(false)
+  const [premiumDialogOpen, setPremiumDialogOpen] = useState(false)
+  const [umkmDialogOpen, setUmkmDialogOpen] = useState(false)
 
   const handleLogin = (username: string, password: string) => {
     const user = (users || []).find(u => u.username === username)
@@ -240,6 +249,36 @@ function App() {
     setSelectedCategory('all')
   }
 
+  const handleUpgradeToPremium = () => {
+    if (!currentUser) return
+    
+    setUsers(current => (current || []).map(user => 
+      user.id === currentUser.id 
+        ? { ...user, isPremium: true, premiumColor: 'oklch(0.65 0.15 60)' }
+        : user
+    ))
+    setCurrentUser(prev => prev ? { ...prev, isPremium: true, premiumColor: 'oklch(0.65 0.15 60)' } : null)
+    toast.success('Selamat! Kamu sekarang member Premium Lapau! 🎉')
+  }
+
+  const handleUMKMVerification = (umkmName: string, umkmDescription: string) => {
+    if (!currentUser) return
+    
+    setUsers(current => (current || []).map(user => 
+      user.id === currentUser.id 
+        ? { ...user, isUMKMVerified: true, umkmName, umkmDescription }
+        : user
+    ))
+    setCurrentUser(prev => prev ? { ...prev, isUMKMVerified: true, umkmName, umkmDescription } : null)
+    toast.success('Verifikasi UMKM berhasil diajukan! Admin akan meninjaunya segera.')
+  }
+
+  const handleAdClick = (adId: string) => {
+    setAds(current => (current || []).map(ad =>
+      ad.id === adId ? { ...ad, clicks: ad.clicks + 1 } : ad
+    ))
+  }
+
   const getFilteredThreads = () => {
     const approved = (threads || []).filter(t => t.status === 'approved')
     
@@ -276,6 +315,8 @@ function App() {
           onNavigateAdmin={() => setView('admin')}
           onCreateThread={() => setCreateThreadOpen(true)}
           onViewProfile={() => currentUser && handleViewProfile(currentUser.id)}
+          onOpenPremium={() => setPremiumDialogOpen(true)}
+          onOpenUMKM={() => setUmkmDialogOpen(true)}
         />
 
         <main className="container mx-auto px-4 py-6 max-w-7xl">
@@ -301,6 +342,8 @@ function App() {
                 onViewThread={handleViewThread}
                 onReaction={handleReaction}
                 onReport={handleReport}
+                ads={ads || []}
+                onAdClick={handleAdClick}
               />
             </>
           )}
@@ -359,6 +402,19 @@ function App() {
         open={createThreadOpen}
         onClose={() => setCreateThreadOpen(false)}
         onCreate={handleCreateThread}
+      />
+
+      <PremiumDialog
+        open={premiumDialogOpen}
+        onClose={() => setPremiumDialogOpen(false)}
+        currentUser={currentUser || null}
+        onUpgradeToPremium={handleUpgradeToPremium}
+      />
+
+      <UMKMVerificationDialog
+        open={umkmDialogOpen}
+        onClose={() => setUmkmDialogOpen(false)}
+        onSubmit={handleUMKMVerification}
       />
 
       <Toaster />

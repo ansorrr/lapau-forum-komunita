@@ -1,4 +1,4 @@
-import type { ReactionType, UserLevel } from './types'
+import type { ReactionType, UserLevel, PremiumReactionType } from './types'
 
 export const CATEGORIES = [
   { id: 'lapau-umum', name: 'Lapau Umum', emoji: '☕' },
@@ -18,6 +18,13 @@ export const REACTIONS: Record<ReactionType, { emoji: string; name: string; desc
   'samba-lado': { emoji: '🌶️', name: 'Samba Lado', description: 'Pedas tapi jujur' },
   'gulai': { emoji: '🥥', name: 'Gulai', description: 'Panjang & dalem' },
   'asin': { emoji: '🧂', name: 'Asin', description: 'Sarkas keras' },
+}
+
+export const PREMIUM_REACTIONS: Record<PremiumReactionType, { emoji: string; name: string; description: string }> = {
+  'pical': { emoji: '🌶️', name: 'Pical', description: 'Pedas maksimal - reaksi premium' },
+  'martabak-kubang': { emoji: '🥟', name: 'Martabak Kubang', description: 'Istimewa banget' },
+  'kopi-khop': { emoji: '☕', name: 'Kopi Khop', description: 'Mantap jiwa' },
+  'sarikayo': { emoji: '🍮', name: 'Sarikayo', description: 'Manis & berkesan' },
 }
 
 export const USER_LEVELS: Record<UserLevel, { name: string; minPosts: number; minReactions: number }> = {

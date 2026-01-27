@@ -5,8 +5,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/t
 import { CATEGORIES, REACTIONS, KAMUS_LAPAU } from '@/lib/constants'
 import { UserAvatar } from './UserAvatar'
 import { MediaPreview } from './MediaPreview'
+import { PremiumBadge } from './PremiumBadge'
 import type { Thread, User as UserType } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
+import { cn } from '@/lib/utils'
 
 interface ThreadCardProps {
   thread: Thread
@@ -85,7 +87,21 @@ export function ThreadCard({ thread, currentUser, users, onViewThread, onReactio
           </h3>
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
-            <span className="font-medium text-foreground">{thread.authorUsername}</span>
+            <div className="flex items-center gap-1.5">
+              <span 
+                className={cn(
+                  "font-medium",
+                  author?.isPremium ? "text-yellow-600" : "text-foreground"
+                )}
+                style={author?.isPremium ? { 
+                  textShadow: '0 0 8px rgba(234, 179, 8, 0.3)'
+                } : undefined}
+              >
+                {thread.authorUsername}
+              </span>
+              {author?.isPremium && <PremiumBadge type="premium" size="sm" />}
+              {author?.isUMKMVerified && !author?.isPremium && <PremiumBadge type="umkm" size="sm" />}
+            </div>
             <span>•</span>
             <TooltipProvider>
               <Tooltip>

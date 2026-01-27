@@ -19,6 +19,12 @@ export type ReactionType =
   | 'gulai'
   | 'asin'
 
+export type PremiumReactionType =
+  | 'pical'
+  | 'martabak-kubang'
+  | 'kopi-khop'
+  | 'sarikayo'
+
 export interface User {
   id: string
   username: string
@@ -29,6 +35,11 @@ export interface User {
   createdAt: number
   avatar?: string
   avatarColor?: string
+  isPremium?: boolean
+  premiumColor?: string
+  isUMKMVerified?: boolean
+  umkmName?: string
+  umkmDescription?: string
 }
 
 export type MediaType = 'image' | 'video'
@@ -50,10 +61,28 @@ export interface Thread {
   status: PostStatus
   createdAt: number
   reactions: Record<ReactionType, string[]>
+  premiumReactions?: Record<PremiumReactionType, string[]>
   commentCount: number
   isAnonymous?: boolean
   rejectionNote?: string
   media?: Media[]
+  isUMKMThread?: boolean
+  sponsoredBy?: string
+}
+
+export interface Advertisement {
+  id: string
+  advertiserId: string
+  title: string
+  content: string
+  imageUrl?: string
+  targetUrl?: string
+  placement: 'sidebar' | 'between-threads' | 'thread-bottom'
+  impressions: number
+  clicks: number
+  status: 'active' | 'paused' | 'ended'
+  createdAt: number
+  endDate?: number
 }
 
 export interface Comment {

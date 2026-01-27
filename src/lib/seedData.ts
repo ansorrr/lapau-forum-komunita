@@ -1,4 +1,4 @@
-import type { Thread, User, Comment } from './types'
+import type { Thread, User, Comment, Advertisement } from './types'
 import { generateAvatarColor } from './utils'
 
 export const SEED_USERS: User[] = [
@@ -11,6 +11,8 @@ export const SEED_USERS: User[] = [
     totalReactions: 892,
     createdAt: Date.now() - 365 * 24 * 60 * 60 * 1000,
     avatarColor: generateAvatarColor('user-admin'),
+    isPremium: true,
+    premiumColor: 'oklch(0.65 0.15 60)',
   },
   {
     id: 'user-1',
@@ -31,6 +33,8 @@ export const SEED_USERS: User[] = [
     totalReactions: 156,
     createdAt: Date.now() - 120 * 24 * 60 * 60 * 1000,
     avatarColor: generateAvatarColor('user-2'),
+    isPremium: true,
+    premiumColor: 'oklch(0.65 0.15 60)',
   },
   {
     id: 'user-3',
@@ -51,6 +55,9 @@ export const SEED_USERS: User[] = [
     totalReactions: 445,
     createdAt: Date.now() - 200 * 24 * 60 * 60 * 1000,
     avatarColor: generateAvatarColor('user-4'),
+    isUMKMVerified: true,
+    umkmName: 'Kopi Lapau Tradisional',
+    umkmDescription: 'Menjual kopi dan makanan ringan khas Minang',
   },
 ]
 
@@ -319,6 +326,45 @@ export const SEED_THREADS: Thread[] = [
   },
 ]
 
+export const SEED_ADS: Advertisement[] = [
+  {
+    id: 'ad-1',
+    advertiserId: 'user-4',
+    title: 'Kopi Lapau Tradisional - Rasa Autentik Minang',
+    content: 'Nikmati kopi pilihan dengan cita rasa khas Minang. Tersedia kopi hitam, kopi susu, dan teh talua. Pesan sekarang!',
+    imageUrl: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&h=200&fit=crop',
+    targetUrl: 'https://example.com',
+    placement: 'sidebar',
+    impressions: 0,
+    clicks: 0,
+    status: 'active',
+    createdAt: Date.now() - 7 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: 'ad-2',
+    advertiserId: 'user-4',
+    title: 'Rendang Uni Yanti - Pengiriman ke Seluruh Indonesia',
+    content: 'Rendang asli Padang dengan resep turun temurun. Daging sapi pilihan, bumbu rempah alami. Order via WhatsApp!',
+    placement: 'between-threads',
+    impressions: 0,
+    clicks: 0,
+    status: 'active',
+    createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: 'ad-3',
+    advertiserId: 'user-4',
+    title: 'Belajar Bisnis UMKM di Lapau',
+    content: 'Workshop gratis untuk pelaku UMKM Minang. Belajar marketing digital, kelola keuangan, dan strategi berkembang.',
+    imageUrl: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&h=200&fit=crop',
+    placement: 'between-threads',
+    impressions: 0,
+    clicks: 0,
+    status: 'active',
+    createdAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+  },
+]
+
 export const SEED_COMMENTS: Comment[] = [
   {
     id: 'comment-1',
@@ -341,15 +387,17 @@ export const SEED_COMMENTS: Comment[] = [
 export function initializeSeedData(
   users: User[],
   threads: Thread[],
-  comments: Comment[]
-): { users: User[]; threads: Thread[]; comments: Comment[] } {
+  comments: Comment[],
+  ads: Advertisement[]
+): { users: User[]; threads: Thread[]; comments: Comment[]; ads: Advertisement[] } {
   if (users.length === 0 && threads.length === 0) {
     return {
       users: SEED_USERS,
       threads: SEED_THREADS,
       comments: SEED_COMMENTS,
+      ads: SEED_ADS,
     }
   }
   
-  return { users, threads, comments }
+  return { users, threads, comments, ads }
 }

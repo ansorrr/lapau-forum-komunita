@@ -1,8 +1,9 @@
-import { Plus, SignOut, ShieldCheck, House, ChatCircle } from '@phosphor-icons/react'
+import { Plus, SignOut, ShieldCheck, House, ChatCircle, Crown, Storefront } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { USER_LEVELS } from '@/lib/constants'
 import { UserAvatar } from './UserAvatar'
 import type { User as UserType } from '@/lib/types'
+import { cn } from '@/lib/utils'
 
 interface HeaderProps {
   currentUser: UserType | null
@@ -13,6 +14,8 @@ interface HeaderProps {
   onNavigateAdmin: () => void
   onCreateThread: () => void
   onViewProfile: () => void
+  onOpenPremium: () => void
+  onOpenUMKM: () => void
 }
 
 export function Header({
@@ -24,6 +27,8 @@ export function Header({
   onNavigateAdmin,
   onCreateThread,
   onViewProfile,
+  onOpenPremium,
+  onOpenUMKM,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
@@ -48,7 +53,14 @@ export function Header({
                   <div className="hidden md:flex items-center gap-2 mr-2 px-3 py-1.5 bg-white/10 rounded-md">
                     <UserAvatar user={currentUser} size="sm" />
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium leading-tight">{currentUser.username}</span>
+                      <span 
+                        className={cn(
+                          "text-sm font-medium leading-tight",
+                          currentUser.isPremium && "text-yellow-300"
+                        )}
+                      >
+                        {currentUser.username}
+                      </span>
                       <span className="text-xs opacity-75 leading-tight">
                         {USER_LEVELS[currentUser.level].name}
                       </span>
@@ -133,6 +145,24 @@ export function Header({
               <ChatCircle size={16} weight="fill" />
               <span>Thread Terbaru</span>
             </button>
+            {currentUser && !currentUser.isPremium && (
+              <button
+                onClick={onOpenPremium}
+                className="flex items-center gap-2 text-sm font-medium text-yellow-600 hover:text-yellow-700 transition-colors ml-auto"
+              >
+                <Crown size={16} weight="fill" />
+                <span>Upgrade Premium</span>
+              </button>
+            )}
+            {currentUser && !currentUser.isUMKMVerified && (
+              <button
+                onClick={onOpenUMKM}
+                className="flex items-center gap-2 text-sm font-medium text-success hover:opacity-80 transition-opacity"
+              >
+                <Storefront size={16} weight="fill" />
+                <span>Verifikasi UMKM</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

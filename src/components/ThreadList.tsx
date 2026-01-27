@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Card } from './ui/card'
 import { Badge } from './ui/badge'
 import { CATEGORIES } from '@/lib/constants'
-import type { Thread, User } from '@/lib/types'
+import type { Thread, User, Advertisement } from '@/lib/types'
 import { ThreadCard } from './ThreadCard'
+import { AdBanner, SidebarAd } from './AdBanner'
 
 interface ThreadListProps {
   threads: Thread[]
@@ -14,6 +15,8 @@ interface ThreadListProps {
   onViewThread: (threadId: string) => void
   onReaction: (threadId: string, reaction: string) => void
   onReport: (threadId: string) => void
+  ads?: Advertisement[]
+  onAdClick?: (adId: string) => void
 }
 
 export function ThreadList({
@@ -25,6 +28,8 @@ export function ThreadList({
   onViewThread,
   onReaction,
   onReport,
+  ads = [],
+  onAdClick,
 }: ThreadListProps) {
   const approvedThreads = threads.filter(t => t.status === 'approved')
   
@@ -41,6 +46,9 @@ export function ThreadList({
     .slice(0, 5)
 
   const displayThreads = filteredThreads.sort((a, b) => b.createdAt - a.createdAt)
+
+  const sidebarAds = ads.filter(ad => ad.status === 'active' && ad.placement === 'sidebar')
+  const betweenThreadsAds = ads.filter(ad => ad.status === 'active' && ad.placement === 'between-threads')
 
   const getCategoryThreadCount = (categoryId: string) => {
     if (categoryId === 'all') return approvedThreads.length
@@ -120,6 +128,14 @@ export function ThreadList({
               </div>
             </div>
           )}
+
+          {sidebarAds.length > 0 && (
+            <div className="mt-6 space-y-4">
+              {sidebarAds.map(ad => (
+                <SidebarAd key={ad.id} ad={ad} onClick={onAdClick} />
+              ))}
+            </div>
+          )}
         </Card>
       </aside>
 
@@ -164,16 +180,28 @@ export function ThreadList({
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {displayThreads.map((thread) => (
-                <ThreadCard
-                  key={thread.id}
-                  thread={thread}
-                  users={users}
-                  currentUser={currentUser}
-                  onViewThread={onViewThread}
-                  onReaction={onReaction}
-                  onReport={onReport}
-                />
+              {displayThreads.map((thread, index) => (
+                <>
+                  <ThreadCard
+                    key={thread.id}
+                    thread={thread}
+                    users={users}
+                    currentUser={currentUser}
+                    onViewThread={onViewThread}
+                    onReaction={onReaction}
+                    onReport={onReport}
+                  />
+                  {index === 2 && betweenThreadsAds[0] && (
+                    <div className="p-4">
+                      <AdBanner ad={betweenThreadsAds[0]} onClick={onAdClick} />
+                    </div>
+                  )}
+                  {index === 5 && betweenThreadsAds[1] && (
+                    <div className="p-4">
+                      <AdBanner ad={betweenThreadsAds[1]} onClick={onAdClick} />
+                    </div>
+                  )}
+                </>
               ))}
             </div>
           )}
