@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import type { User, Thread, Comment, Report, Media } from './lib/types'
 import { generateAvatarColor } from './lib/utils'
+import { initializeSeedData } from './lib/seedData'
 import { Header } from './components/Header'
 import { AuthDialog } from './components/AuthDialog'
 import { ThreadList } from './components/ThreadList'
@@ -20,6 +21,19 @@ function App() {
   const [comments, setComments] = useKV<Comment[]>('comments', [])
   const [reports, setReports] = useKV<Report[]>('reports', [])
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
+  
+  useEffect(() => {
+    const seedData = initializeSeedData(users || [], threads || [], comments || [])
+    if (seedData.users.length > 0 && (users || []).length === 0) {
+      setUsers(seedData.users)
+    }
+    if (seedData.threads.length > 0 && (threads || []).length === 0) {
+      setThreads(seedData.threads)
+    }
+    if (seedData.comments.length > 0 && (comments || []).length === 0) {
+      setComments(seedData.comments)
+    }
+  }, [])
 
   const [view, setView] = useState<View>('home')
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)

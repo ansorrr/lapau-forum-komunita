@@ -101,22 +101,22 @@ This is a full-featured forum platform with user authentication, role-based acce
 
 ## Design Direction
 
-The design should evoke a familiar, organized forum experience similar to Kaskus - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a sidebar-based category navigation, table-like thread listings, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery.
+The design should evoke a familiar, organized forum experience similar to Kaskus - structured, efficient, and community-focused with clear hierarchy and navigation. The interface features a sidebar-based category navigation, thread listings with prominent media previews, and a purple-based color scheme that feels modern and distinctive while maintaining excellent readability. Every element is designed for quick scanning and efficient content discovery, with eye-catching imagery that brings threads to life.
 
 ## Color Selection
 
-Modern purple-based palette inspired by contemporary forums with excellent contrast:
+Modern purple-based palette inspired by contemporary forums with excellent contrast and visual appeal:
 
-- **Primary Color**: Deep Purple `oklch(0.45 0.15 280)` - Main brand color for actions and interactive elements, provides strong visual identity
+- **Primary Color**: Rich Purple `oklch(0.50 0.18 290)` - Main brand color for actions and interactive elements, provides strong visual identity and stands out distinctly
 - **Secondary Colors**: 
-  - Light Gray `oklch(0.96 0.01 280)` - Subtle backgrounds for secondary content areas
+  - Light Gray `oklch(0.95 0.01 280)` - Subtle backgrounds for secondary content areas
   - Success Green `oklch(0.55 0.15 145)` - Approval actions, success states
-  - Near Black `oklch(0.20 0.015 280)` - Text with a slight purple tint for cohesion
-- **Accent Color**: Vibrant Orange `oklch(0.65 0.20 35)` - Call-to-action highlights, important notifications
+  - Near Black `oklch(0.25 0.02 280)` - Text with a slight purple tint for cohesion
+- **Accent Color**: Warm Orange `oklch(0.60 0.18 30)` - Call-to-action highlights, important notifications, creates energetic contrast
 - **Foreground/Background Pairings**: 
-  - Primary Purple `oklch(0.45 0.15 280)`: White text `oklch(1 0 0)` - Ratio 8.2:1 ✓
-  - Light Background `oklch(0.98 0.005 280)`: Dark text `oklch(0.20 0.015 280)` - Ratio 15.1:1 ✓
-  - Accent Orange `oklch(0.65 0.20 35)`: White text `oklch(1 0 0)` - Ratio 4.6:1 ✓
+  - Primary Purple `oklch(0.50 0.18 290)`: White text `oklch(1 0 0)` - Ratio 9.2:1 ✓
+  - Light Background `oklch(0.97 0.01 280)`: Dark text `oklch(0.25 0.02 280)` - Ratio 13.8:1 ✓
+  - Accent Orange `oklch(0.60 0.18 30)`: White text `oklch(1 0 0)` - Ratio 5.3:1 ✓
   - Success Green `oklch(0.55 0.15 145)`: White text `oklch(1 0 0)` - Ratio 5.8:1 ✓
 
 ## Font Selection
@@ -153,21 +153,24 @@ Animations should be quick and efficient - prioritizing content over motion. Use
   - Scroll Area: Long comment threads
   - Tooltip: Hover definitions for Minangkabau terms
   - Checkbox: Anonymous posting option
+  - Media Preview: Grid of thumbnails (112x112px) for images/videos in thread listings
   
 - **Customizations**: 
   - Sidebar navigation: Persistent category list with thread counts
-  - Table-like thread rows: Compact listing with metadata columns
-  - Gradient header: Purple gradient for main header bar
+  - Thread rows: Clean listing with prominent media previews
+  - Gradient header: Purple gradient (290-270 hue) for main header bar
   - Reaction button bar: Horizontal list of emoji reactions with counts
   - Nested comments: Indented replies with left border indicator
   - Section headers: Card headers with background color and uppercase labels
+  - Media thumbnails: 112x112px rounded squares showing thread images prominently
   
 - **States**: 
   - Buttons: Solid fills for actions, clear hover darkening, active press state
   - Thread rows: Subtle background change on hover (no scale/shadow)
   - Category items: Selected state with primary color background and white text
-  - Reactions: Show top 3 with counts, click to toggle
+  - Reactions: Show top 3 with counts, click to toggle with bounce animation
   - Inputs: Simple border focus, no elaborate effects
+  - Media hover: Slight opacity reduction for clickable feedback
   
 - **Icon Selection**: 
   - @phosphor-icons/react for all UI:

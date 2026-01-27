@@ -27,7 +27,7 @@ export function Header({
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
-      <div className="kaskus-sidebar-gradient text-white">
+      <div className="header-gradient text-white">
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
             <button

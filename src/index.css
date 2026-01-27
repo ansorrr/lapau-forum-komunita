@@ -8,25 +8,25 @@
 }
 
 :root {
-  --background: oklch(0.98 0.005 280);
-  --foreground: oklch(0.20 0.015 280);
+  --background: oklch(0.97 0.01 280);
+  --foreground: oklch(0.25 0.02 280);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.015 280);
+  --card-foreground: oklch(0.25 0.02 280);
   
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.015 280);
+  --popover-foreground: oklch(0.25 0.02 280);
 
-  --primary: oklch(0.45 0.15 280);
+  --primary: oklch(0.50 0.18 290);
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.96 0.01 280);
-  --secondary-foreground: oklch(0.20 0.015 280);
+  --secondary: oklch(0.95 0.01 280);
+  --secondary-foreground: oklch(0.25 0.02 280);
 
-  --muted: oklch(0.96 0.01 280);
-  --muted-foreground: oklch(0.50 0.02 280);
+  --muted: oklch(0.95 0.01 280);
+  --muted-foreground: oklch(0.55 0.02 280);
 
-  --accent: oklch(0.65 0.20 35);
+  --accent: oklch(0.60 0.18 30);
   --accent-foreground: oklch(1 0 0);
 
   --destructive: oklch(0.55 0.20 25);
@@ -35,12 +35,9 @@
   --success: oklch(0.55 0.15 145);
   --success-foreground: oklch(1 0 0);
 
-  --border: oklch(0.88 0.005 280);
-  --input: oklch(0.88 0.005 280);
-  --ring: oklch(0.45 0.15 280);
-
-  --sidebar-bg: oklch(0.50 0.15 280);
-  --sidebar-hover: oklch(0.55 0.15 280);
+  --border: oklch(0.90 0.005 280);
+  --input: oklch(0.90 0.005 280);
+  --ring: oklch(0.50 0.18 290);
 
   --radius: 0.375rem;
 }
@@ -111,9 +108,9 @@
 }
 
 .thread-row-hover:hover {
-  background-color: oklch(0.97 0.005 280);
+  background-color: oklch(0.98 0.005 280);
 }
 
-.kaskus-sidebar-gradient {
-  background: linear-gradient(135deg, oklch(0.50 0.15 280) 0%, oklch(0.45 0.18 260) 100%);
+.header-gradient {
+  background: linear-gradient(135deg, oklch(0.48 0.20 290) 0%, oklch(0.55 0.18 270) 100%);
 }
