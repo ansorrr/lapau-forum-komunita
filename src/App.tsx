@@ -11,7 +11,7 @@ import { ThreadDetail } from './components/ThreadDetail'
 import { AdminPanel } from './components/AdminPanel'
 import { UserProfile } from './components/UserProfile'
 import { SearchBar } from './components/SearchBar'
-import { PremiumDialog } from './components/PremiumDialog'
+import { LapauAwards } from './components/LapauAwards'
 import { UMKMVerificationDialog } from './components/UMKMVerificationDialog'
 import { Toaster } from './components/ui/sonner'
 import { toast } from 'sonner'
@@ -50,7 +50,6 @@ function App() {
   const [authDialogOpen, setAuthDialogOpen] = useState(false)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [createThreadOpen, setCreateThreadOpen] = useState(false)
-  const [premiumDialogOpen, setPremiumDialogOpen] = useState(false)
   const [umkmDialogOpen, setUmkmDialogOpen] = useState(false)
 
   const handleLogin = (username: string, password: string) => {
@@ -249,18 +248,6 @@ function App() {
     setSelectedCategory('all')
   }
 
-  const handleUpgradeToPremium = () => {
-    if (!currentUser) return
-    
-    setUsers(current => (current || []).map(user => 
-      user.id === currentUser.id 
-        ? { ...user, isPremium: true, premiumColor: 'oklch(0.65 0.15 60)' }
-        : user
-    ))
-    setCurrentUser(prev => prev ? { ...prev, isPremium: true, premiumColor: 'oklch(0.65 0.15 60)' } : null)
-    toast.success('Selamat! Kamu sekarang member Premium Lapau! 🎉')
-  }
-
   const handleUMKMVerification = (umkmName: string, umkmDescription: string) => {
     if (!currentUser) return
     
@@ -315,7 +302,6 @@ function App() {
           onNavigateAdmin={() => setView('admin')}
           onCreateThread={() => setCreateThreadOpen(true)}
           onViewProfile={() => currentUser && handleViewProfile(currentUser.id)}
-          onOpenPremium={() => setPremiumDialogOpen(true)}
           onOpenUMKM={() => setUmkmDialogOpen(true)}
         />
 
@@ -333,6 +319,15 @@ function App() {
                   </div>
                 )}
               </div>
+              
+              <LapauAwards
+                threads={threads || []}
+                users={users || []}
+                comments={comments || []}
+                onViewThread={handleViewThread}
+                onViewProfile={handleViewProfile}
+              />
+
               <ThreadList
                 threads={searchQuery ? getFilteredThreads() : threads || []}
                 users={users || []}
@@ -402,13 +397,6 @@ function App() {
         open={createThreadOpen}
         onClose={() => setCreateThreadOpen(false)}
         onCreate={handleCreateThread}
-      />
-
-      <PremiumDialog
-        open={premiumDialogOpen}
-        onClose={() => setPremiumDialogOpen(false)}
-        currentUser={currentUser || null}
-        onUpgradeToPremium={handleUpgradeToPremium}
       />
 
       <UMKMVerificationDialog

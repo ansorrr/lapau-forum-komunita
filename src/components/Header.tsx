@@ -1,4 +1,4 @@
-import { Plus, SignOut, ShieldCheck, House, ChatCircle, Crown, Storefront } from '@phosphor-icons/react'
+import { Plus, SignOut, ShieldCheck, House, ChatCircle, Storefront } from '@phosphor-icons/react'
 import { Button } from './ui/button'
 import { USER_LEVELS } from '@/lib/constants'
 import { UserAvatar } from './UserAvatar'
@@ -14,7 +14,6 @@ interface HeaderProps {
   onNavigateAdmin: () => void
   onCreateThread: () => void
   onViewProfile: () => void
-  onOpenPremium: () => void
   onOpenUMKM: () => void
 }
 
@@ -27,7 +26,6 @@ export function Header({
   onNavigateAdmin,
   onCreateThread,
   onViewProfile,
-  onOpenPremium,
   onOpenUMKM,
 }: HeaderProps) {
   return (
@@ -145,19 +143,10 @@ export function Header({
               <ChatCircle size={16} weight="fill" />
               <span>Thread Terbaru</span>
             </button>
-            {currentUser && !currentUser.isPremium && (
-              <button
-                onClick={onOpenPremium}
-                className="flex items-center gap-2 text-sm font-medium text-yellow-600 hover:text-yellow-700 transition-colors ml-auto"
-              >
-                <Crown size={16} weight="fill" />
-                <span>Upgrade Premium</span>
-              </button>
-            )}
             {currentUser && !currentUser.isUMKMVerified && (
               <button
                 onClick={onOpenUMKM}
-                className="flex items-center gap-2 text-sm font-medium text-success hover:opacity-80 transition-opacity"
+                className="flex items-center gap-2 text-sm font-medium text-success hover:opacity-80 transition-opacity ml-auto"
               >
                 <Storefront size={16} weight="fill" />
                 <span>Verifikasi UMKM</span>
